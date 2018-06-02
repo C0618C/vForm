@@ -21,8 +21,6 @@
         this.Init = _vf_init;
         /* 动态更新配置 */
         this.SetOption = _vfSetOption;
-        /* 注册控件 */
-        this.AddWidget = null;
 
         //init
         _constructor(this);

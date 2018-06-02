@@ -1,5 +1,7 @@
 (function(){
     var vf = new VForm();
 
-    console.log("test");
+    //console.log("test");
+
+    vf.AddWidget("text",{})
 })()
