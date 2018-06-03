@@ -1,5 +1,39 @@
 (function () {
-    var _vf_widget = [];
+    var _vf_WidgetFactory = {
+        widget: []
+
+        , AddWidget: _vfwm_AddWidget
+        , GetWidget: _vfwm_GetWidget
+    }
+    var _vfwm_AddWidget = function (type, setting) {
+        var types = type.join(",");
+        for (var i = 0; i < types.length; i++) {
+            (function (i) {
+                if (this.widget[types[i]] !== undefined) {
+                    console.warn("注册Widget出错，已存在的Widget定义：" + types[i]);
+                    return false;
+                }
+                this.widget[types[i]] = setting;
+            })(i);
+        }
+    }
+    //根据配置 生成控件
+    var _vfwm_GetWidget = function (type,setting) {
+        if (this.widget[type] === undefined) {
+            console.warn("获取Widget失败，不存在的Widget定义：" + type);
+            return false;
+        }
+        
+        return this.widget[type];
+    }
+
+
+
+
+
+
+
+
     function vfWidget(setting) {
         /*  */
         this.Create = _v_widget_Create;
@@ -17,7 +51,7 @@
     }
 
     //默认创建函数
-    function _v_widget_Create(){
+    function _v_widget_Create() {
         console.log("创建函数执行。")
     }
 
@@ -30,27 +64,10 @@
         baseclass = null;
     }
 
-    if(window.VForm == undefined){
-        console.warn("没找到vForm，控件注册失败");
-        return;
-    }
-
-    var vForm = window.VForm;
-    vForm.prototype.AddWidget = function(type,setting){
-        if(_vf_widget[type] != undefined){
-            console.warn("控件["+type+"]重复注册。");
-            return;
-        }
-
-        var widget = new vfWidget(setting);
-
-        //test
-        widget.Create();
-
-        _vf_widget[type]=widget;
-    }
 
 
 
-    window.VFWidget = vfWidget;
+
+
+    window.VFWidgetFactory = _vf_WidgetFactory;
 })();

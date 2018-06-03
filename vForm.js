@@ -2,7 +2,7 @@
     function VForm() {
         //--------------------Attributes------------------
         /* 表单当前数据 */
-        this.data = {};
+        //this.data = {};
         /* 表单最新配置 */
         this.curSetting = {};
         /* 初始化设置 */
@@ -20,7 +20,21 @@
         /* 根据配置初始化 */
         this.Init = _vf_init;
         /* 动态更新配置 */
-        this.SetOption = _vfSetOption;
+        this.SetOption = _vfAPISetOption;
+
+        /* 拿到表单数据 */
+        this.GetData = _vfAPIGetDAta;
+        /* 设置表单数据 */
+        this.SetData = _vfAPISetDAta;
+        /*  */
+        /*  */
+        /*  */
+        /*  */
+
+        /* 检查表单数据有效性
+        返回：true / [{name,errinfo},...]
+         */
+        this.Check = _vfAPICheck;
 
         //init
         _constructor(this);
@@ -39,10 +53,10 @@
                     if (typeof _console[a] !== "function")
                         console[a] = _console[a];
                     else
-                    (function(a){
+                    (function (a) {
                         console[a] = function (x, y, z) {
                             if (!vf.status.debug.isdebug) return;
-                            if( a != "trace" )_console.trace();
+                            if (a != "trace") _console.trace();
                             return _console[a](x, y, z);
                         }
                     })(a);
@@ -63,17 +77,33 @@
         return function (config) {
             this.baseSetting = config;
 
+            for(var i = 0;i<config.dataList.length;i++){
+                var widget = VFWidgetManager.GetWidget(config.dataList[i]);
+            }
+
             //TODO: 初始化
         }
     })();
     //根据配置初始化
-    var _vfSetOption = (function () {
-        return function (config) {
-            for (var cf in config) {
-                this.curSetting[cf] = config[cf];
-            }
+    var _vfAPISetOption = function (config) {
+        for (var cf in config) {
+            this.curSetting[cf] = config[cf];
         }
-    })();
+    }
+    //取得表单数据
+    var _vfAPIGetDAta = function () {}
+    //设置表单数据
+    var _vfAPISetDAta = function () {
+
+    };
+    //检查表单数据有效性
+    //返回：true / [{name,errinfo},...]
+    var _vfAPICheck = function(){
+
+    }
+
+
+
 
 
 
