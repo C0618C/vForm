@@ -18,15 +18,17 @@
         }
     }
     //根据配置 生成控件
-    var _vfwm_GetWidget = function (type,setting) {
+    var _vfwm_GetWidget = function (type, setting) {
         if (this.widget[type] === undefined) {
             console.warn("获取Widget失败，不存在的Widget定义：" + type);
             return false;
         }
-        
+
         return this.widget[type];
     }
 
+    window.VFWidgetFactory = _vf_WidgetFactory;
+})();
 
 
 
@@ -34,26 +36,56 @@
 
 
 
+(function () {
     function vfWidget(setting) {
+        this.data = {
+            value: ""
+            , text: ""
+        };
         /*  */
         this.Create = _v_widget_Create;
 
-        this.GetData = null;
-        this.GetText = null;
-        this.GetValue = null;
+        this.GetData = _v_widget_GetData;
+        this.GetText = _v_widget_GetText;
+        this.GetValue = _v_widget_GetValue;
 
-        this.SetData = null;
-        this.SetData = null;
-        this.SetValue = null;
+        this.SetData = _v_widget_SetData;
+        this.SetText = _v_widget_SetText;
+        this.SetValue = _v_widget_SetValue;
 
-        this.Check = null;
+        this.SetOption = _v_widget_SetOption;
+
+        this.Check = _v_widget_Check;
         return this;
     }
 
     //默认创建函数
     function _v_widget_Create() {
-        console.log("创建函数执行。")
+        console.log("创建函数执行。");
     }
+
+    function _v_widget_GetData() {
+        return this.data;
+    }
+    function _v_widget_GetText() {
+        return this.data.text;
+    }
+    function _v_widget_GetValue() {
+        return this.data.value;
+    }
+    function _v_widget_SetData(data) {
+        this.data.text = data.text;
+        this.data.value = data.value;
+    }
+    function _v_widget_SetText(text) {
+        this.data.text = text;
+    }
+    function _v_widget_SetValue(value) {
+        this.data.value = value;
+    }
+    function _v_widget_SetOption() { }
+    function _v_widget_Check() { }
+
 
     var _inherit = function (baseclass, childclass, param) {
         var base = new baseclass(param);
@@ -63,11 +95,10 @@
         }
         baseclass = null;
     }
+})();
 
+(function () {
+    VFWidgetFactory.AddWidget("text,number", {
 
-
-
-
-
-    window.VFWidgetFactory = _vf_WidgetFactory;
+    });
 })();
