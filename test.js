@@ -3,5 +3,7 @@
 
     //console.log("test");
 
-    vf.AddWidget("text",{})
+    Object.getPrototypeOf(VForm).T = function(x){alert(x)}
+    VForm.T(1);
+
 })()

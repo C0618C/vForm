@@ -1,38 +1,35 @@
 (function () {
-    var _vf_WidgetFactory = {
-        widget: []
+    var widget = [];
+    function VFWidgetFactory(){        
+        this.AddWidget= _vfwm_AddWidget;
+        this.GetWidget= _vfwm_GetWidget;
 
-        , AddWidget: _vfwm_AddWidget
-        , GetWidget: _vfwm_GetWidget
+        return this;
     }
     var _vfwm_AddWidget = function (type, setting) {
-        var types = type.join(",");
+        var types = type.split(",");
         for (var i = 0; i < types.length; i++) {
             (function (i) {
-                if (this.widget[types[i]] !== undefined) {
+                if (widget[types[i]] !== undefined) {
                     console.warn("注册Widget出错，已存在的Widget定义：" + types[i]);
                     return false;
                 }
-                this.widget[types[i]] = setting;
+                widget[types[i]] = setting;
             })(i);
         }
     }
     //根据配置 生成控件
     var _vfwm_GetWidget = function (type, setting) {
-        if (this.widget[type] === undefined) {
+        if (widget[type] === undefined) {
             console.warn("获取Widget失败，不存在的Widget定义：" + type);
             return false;
         }
 
-        return this.widget[type];
+        return widget[type];
     }
-
-    window.VFWidgetFactory = _vf_WidgetFactory;
+    var vf = new VFWidgetFactory();
+    window.VFWidgetFactory =vf;
 })();
-
-
-
-
 
 
 
@@ -98,6 +95,10 @@
 })();
 
 (function () {
+    function Widget_Input(setting){
+
+
+    }
     VFWidgetFactory.AddWidget("text,number", {
 
     });
