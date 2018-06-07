@@ -15,6 +15,8 @@
                 isdebug: true                //是否调试模式
             }
         };
+        this.widgets=[];
+        this.dom = null;
 
         //APIs
         /* 根据配置初始化 */
@@ -76,12 +78,19 @@
     var _vf_init = (function () {
         return function (config) {
             this.baseSetting = config;
+            this.SetOption(config);
 
-            for(var i = 0;i<config.dataList.length;i++){
-                var widget = VFWidgetManager.GetWidget(config.dataList[i]);
+            for(var i = 0;i<config.widgets.length;i++){
+                var widget = VFWidgetFactory.GetWidget(config.widgets[i]);
+                this.widgets.push(widget);
             }
 
-            //TODO: 初始化
+            this.dom = document.createElement("div");
+            for(var i = 0;i<this.widgets.length;i++){
+                this.dom.appendChild(this.widgets[i].dom);
+            }
+
+            document.body.appendChild(this.dom);
         }
     })();
     //根据配置初始化
@@ -91,7 +100,11 @@
         }
     }
     //取得表单数据
-    var _vfAPIGetDAta = function () {}
+    var _vfAPIGetDAta = function () {
+        var d = {};
+        for(var i = 0;i<this.widgets.length;i++) d[this.widgets[i].GetOption().id] = this.widgets[i].GetData();
+        return d;
+    }
     //设置表单数据
     var _vfAPISetDAta = function () {
 
