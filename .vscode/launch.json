@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "开启服务器",
             "program": "${workspaceRoot}/Test/run.js",
-            "args":["2262","${workspaceRoot}","/index.html"] //"${file}"
+            "args":["2262","${workspaceRoot}","/demo/index.html"] //"${file}"
         },
         {
             "type": "node",

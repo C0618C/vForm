@@ -1,0 +1,42 @@
+{
+    "column":1
+    ,"widgets":[
+        {
+            "id": "test2"
+            , "select_name": "ss1123", "type": "radio", "name": "单选"
+            , "align": "left","options":[{"value":1,"text":"是"},{"value":0,"text":"否"}]
+            , "validate": { "require": false }
+        }
+
+        ,{
+            "id": "tesx1"
+            , "select_name": "FunAreaText2", "type": "password", "name": "控件2"
+            , "align": "left","placeholder":"这是密码"
+            , "validate": { "require": false }
+        }
+        ,{
+            "id": "test2"
+            , "select_name": "ss112", "type": "checkbox", "name": "多选"
+            , "align": "left","options":[{"value":1,"text":"是"},{"value":0,"text":"否"}]
+            , "validate": { "require": false }
+        }
+        ,{
+            "id": "tesx1"
+            , "select_name": "FunAreaText2", "type": "text", "name": "控件2"
+            , "align": "left","value":"这是默认值"
+            , "validate": { "require": false }
+        }
+        ,{
+            "id": "tesx1"
+            , "select_name": "FunAreaText2", "type": "text", "name": "控件2"
+            , "align": "left","placeholder":"这是placeholder"
+            , "validate": { "require": false }
+        }
+        ,{
+            "id": "tesx1"
+            , "select_name": "FunAreaText2", "type": "button", "name": "控件2"
+            , "align": "left","value":"测试"
+            , "validate": { "require": false }
+        }
+    ]
+}

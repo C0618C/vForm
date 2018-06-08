@@ -59,12 +59,12 @@
         this.SetValue = _v_widget_SetValue;
         this.IsCtrl = _v_widget_IsCtrl;
         this.Focus = _v_widget_Focus;
-        this.ToString =  _v_widget_ToString;
+        this.ToString = _v_widget_ToString;
         this.Create = _v_widget_Create;
-        this.Refresh = _v_widget_Refresh;           //用于将值同步到控件上
         this.GetOption = _v_widget_GetOption;
 
         //需要重载的API
+        this.Refresh = null;           //用于将值同步到控件上
         this._createDomObj = null;      //创建实际的控件
         this.SetOption = null;
         this.Check = null;
@@ -76,36 +76,49 @@
     //控件初始化
     function _v_widget_Init() {
         this.dom = document.createElement("div");
-        this.cell = document.createElement("div");
-        var n = document.createElement("div");
-        this.label = document.createElement("label");
-        this.class = "vform_widget";
-        this.label.class = "vform_widget_label";
-        this.label.innerText = this.curSetting.name;
-        this.cell.class = "vform_widget_cell";
+        this.dom.className = "vform_widget";
+        if (this.curSetting.name === undefined) {
+            this.cell = this.dom;
+        } else {
+            var n = document.createElement("div");
+            this.cell = document.createElement("div");
+            this.label = document.createElement("label");
+            this.label.className = "vform_widget_label";
+            this.label.innerText = this.curSetting.name;
+            n.appendChild(this.label);
+            this.dom.appendChild(n);
+            this.dom.appendChild(this.cell);
+        }
+        this.cell.className = "vform_widget_cell";
 
-        n.appendChild(this.label);
-        this.dom.appendChild(n);
-        this.dom.appendChild(this.cell);
     }
-    function _v_widget_Create(){
+    function _v_widget_Create() {
         var obj = null;
         var s = this.curSetting;
 
         if (this.IsCtrl()) {
             obj = this._createDomObj();
-            if(this.ctrlObj === null) this.ctrlObj = obj;
+            if (this.ctrlObj === null) this.ctrlObj = obj;
         } else {
             obj = document.createElement("span");
         }
-        obj.id = MakeAnId(8) + "_" + s.id;
-        this.ctrlId = obj.id;
-        if(this.label) this.label.setAttribute("for",this.ctrlId);
-        if (s.cls) this.cell.class = this.cell.class + " " + s.cls;
-        if (s.select_name) obj.name = s.select_name;
-        if (s.value !== undefined) this.SetValue(s.value);
+        if (obj) {
+            obj.id = MakeAnId(8) + "_" + s.id;
+            this.ctrlId = obj.id;
+            if (this.label) this.label.setAttribute("for", this.ctrlId);
+            if (s.cls) this.cell.class = this.cell.class + " " + s.cls;
+            if (s.select_name) obj.name = s.select_name;
+            if (s.value !== undefined) this.SetValue(s.value);
 
-        this.cell.appendChild(obj);
+            //DEBUG:
+            this.dom.setAttribute("role", "dom");
+            this.cell.setAttribute("role", "cell");
+            if(this.label) this.label.setAttribute("role", "label");
+            this.ctrlObj.setAttribute("role", "ctrlObj");
+
+            this.cell.appendChild(obj);
+        }
+        if (s.value !== undefined) this.SetValue(s.value, true);
     }
 
     function _v_widget_GetData() {
@@ -115,23 +128,23 @@
         return this.data.text;
     }
     function _v_widget_GetValue(isString) {
-        return isString===true?this.ToString(): this.data.value;
+        return isString === true ? this.ToString() : this.data.value;
     }
     function _v_widget_ToString(isString) {
         return JSON.stringify(this.data.value);
     }
-    function _v_widget_SetData(data,isRefresh) {
+    function _v_widget_SetData(data, isRefresh) {
         this.data.text = data.text;
         this.data.value = data.value;
-        if(isRefresh !== false) this.Refresh("data");
+        if (isRefresh !== false) this.Refresh("data");
     }
-    function _v_widget_SetText(text,isRefresh) {
+    function _v_widget_SetText(text, isRefresh) {
         this.data.text = text;
-        if(isRefresh !== false) this.Refresh("text");
+        if (isRefresh !== false) this.Refresh("text");
     }
-    function _v_widget_SetValue(value,isRefresh) {
+    function _v_widget_SetValue(value, isRefresh) {
         this.data.value = value;
-        if(isRefresh !== false) this.Refresh("value");
+        if (isRefresh !== false) this.Refresh("value");
     }
     function _v_widget_IsCtrl() {
         //TODO:处理node_code的可控制权限
@@ -141,33 +154,36 @@
         return this.ctrlObj ? this.ctrlObj.focus() : false;
     }
 
-    function _v_widget_Refresh() {
-        if (this.IsCtrl()) {
-            this.cell.value = this.GetValue();
-        } else {
-            document.getElementById(this.ctrlId).innerText = this.GetText();
-        }
-    }
-    function _v_widget_GetOption(){
+    function _v_widget_GetOption() {
         return this.curSetting;
     }
 
 
     //定义控件    
-    VFWidgetFactory.AddWidget("text,number,password", function (setting) {
+    VFWidgetFactory.AddWidget("text,number,password,button", function (setting) {
         //继承父类
         vfWidget.call(this, setting);
 
         //重载子类方法
-        this._createDomObj = function(){
+        this._createDomObj = function () {
             var obj = document.createElement("input");
             obj.type = setting.type;
+            if (setting.placeholder) obj.setAttribute("placeholder", setting.placeholder);
             var wg = this;
-            obj.addEventListener("change",function(){
-                wg.SetData({text:obj.value,value:obj.value},false);
+            obj.addEventListener("change", function () {
+                wg.SetData({ text: obj.value, value: obj.value }, false);
             });
             return obj;
         }
+
+        this.Refresh = function (type) {
+            if (this.IsCtrl()) {
+                this.ctrlObj.value = this.GetValue();
+            } else {
+                //document.getElementById(this.ctrlId).innerText = this.GetText();
+            }
+        }
+
         this.Create();
         return this;
     });
@@ -176,11 +192,11 @@
         vfWidget.call(this, setting);
 
         //重载子类方法
-        this._createDomObj = function(){
+        this._createDomObj = function () {
             var obj = document.createElement("textarea");
             var wg = this;
-            obj.addEventListener("change",function(){
-                wg.SetData({text:obj.value,value:obj.value},false);
+            obj.addEventListener("change", function () {
+                wg.SetData({ text: obj.value, value: obj.value }, false);
             });
             return obj;
         }
@@ -191,15 +207,42 @@
     VFWidgetFactory.AddWidget("checkbox,radio", function (setting) {
         //继承父类
         vfWidget.call(this, setting);
+        var s = setting;
+
+        //根据options里的选项，进行初始化
+        this._CreateByOptions = function () {
+            var ss = this.curSetting;
+            var n = s.select_name || MakeAnId(10);
+            if (!ss.options || ss.options.length == 0) return;
+
+            for (var i = 0; i < ss.options.length; i++) {
+                var o = document.createElement("input");
+                var id = MakeAnId(8);
+                o.type = s.type;
+                o.name = n;
+                o.value = ss.options[i].value;
+                o.id = id;
+
+                var l = document.createElement("label");
+                l.innerText = ss.options[i].text;
+                l.setAttribute("for", id);
+
+                this.cell.appendChild(o);
+                this.cell.appendChild(l);
+            }
+        }
 
         //重载子类方法
-        this._createDomObj = function(){
-            var obj = document.createElement(setting.type);
-            var wg = this;
-            obj.addEventListener("change",function(){
-                wg.SetData({text:obj.value,value:obj.value},false);
-            });
-            return obj;
+        this._createDomObj = function () {
+            if (!s.options || s.options.length == 0)
+                this._LoadFromOptions();
+
+            this._CreateByOptions();
+            return null;
+        }
+
+        this._LoadFromOptions = function () {
+            console.warn("需要加载数据源");
         }
 
         this.Create();
@@ -211,13 +254,13 @@
 
         this.widgets = [];
         //重载子类方法
-        this._createDomObj = function(){
+        this._createDomObj = function () {
             var s = setting;
             var obj = document.createElement(s.type);
             var wg = this;
             var th = document.createElement("tr");
             var tr = document.createElement("tr");
-            for(var c = 0;c<s.widgets.length;c++){
+            for (var c = 0; c < s.widgets.length; c++) {
                 var hc = document.createElement("th");
                 hc.innerText = s.widgets[c].name;
                 th.appendChild(hc);
@@ -236,10 +279,7 @@
             obj.appendChild(thead);
             obj.appendChild(tbody);
 
-            // obj.addEventListener("change",function(){
-            //     wg.SetData({text:obj.value,value:obj.value},false);
-            // });
-            if(s.DataTable === true){
+            if (s.DataTable === true) {
                 obj.setAttribute("class", "table table-striped table-bordered");
                 $(obj).DataTable();
             }
