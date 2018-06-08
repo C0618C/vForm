@@ -22,7 +22,7 @@
             {
                 "id": "test2"
                 , "select_name": "FunAreaText", "type": "table", "name": "控件1"
-                , "align": "left"
+                , "align": "left","DataTable":true
                 , widgets:[
                     {
                         "id": "test2"

@@ -228,11 +228,21 @@
                 bc.appendChild(w.cell);
                 tr.appendChild(bc);
             }
-            obj.appendChild(th);
-            obj.appendChild(tr);
+            var thead = document.createElement("thead");
+            var tbody = document.createElement("tbody");
+
+            thead.appendChild(th);
+            tbody.appendChild(tr)
+            obj.appendChild(thead);
+            obj.appendChild(tbody);
+
             // obj.addEventListener("change",function(){
             //     wg.SetData({text:obj.value,value:obj.value},false);
             // });
+            if(s.DataTable === true){
+                obj.setAttribute("class", "table table-striped table-bordered");
+                $(obj).DataTable();
+            }
             return obj;
         }
 
