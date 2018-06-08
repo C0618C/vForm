@@ -76,13 +76,15 @@
     //控件初始化
     function _v_widget_Init() {
         this.dom = document.createElement("div");
-        this.dom.className = "vform_widget";
+        this.dom.className = "col vform_widget";
         if (this.curSetting.name === undefined) {
             this.cell = this.dom;
         } else {
             var n = document.createElement("div");
+            n.className = "vform_widget_name";
             this.cell = document.createElement("div");
             this.label = document.createElement("label");
+            this.cell.className = "vform_widget_cell";
             this.label.className = "vform_widget_label";
             this.label.innerText = this.curSetting.name;
             n.appendChild(this.label);
@@ -230,6 +232,7 @@
                 this.cell.appendChild(o);
                 this.cell.appendChild(l);
             }
+            this.cell.className += " vform_widget_choice"
         }
 
         //重载子类方法

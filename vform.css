@@ -1,0 +1,6 @@
+.vform_widget{border:1px solid gray;border-left: none;}
+.vform_widget .vform_widget_name,
+.vform_widget .vform_widget_cell{display:inline-block;min-width: 120px;width: 240px;}
+.vform_widget .vform_widget_name{border-right: 1px solid gray;height: 100%;}
+
+.vform_widget .vform_widget_choice label{margin-left: 5px;margin-right: 15px;}

@@ -15,7 +15,7 @@
                 isdebug: true                //是否调试模式
             }
         };
-        this.widgets=[];
+        this.widgets = [];
         this.dom = null;
 
         //APIs
@@ -80,16 +80,24 @@
             this.baseSetting = config;
             this.SetOption(config);
 
-            for(var i = 0;i<config.widgets.length;i++){
+            var s = this.curSetting;
+            for (var i = 0; i < config.widgets.length; i++) {
                 var widget = VFWidgetFactory.GetWidget(config.widgets[i]);
                 this.widgets.push(widget);
             }
 
             this.dom = document.createElement("div");
-            for(var i = 0;i<this.widgets.length;i++){
-                this.dom.appendChild(this.widgets[i].dom);
+            var r = null;
+            for (var i = 0; i < this.widgets.length; i++) {
+                if (i % s.column == 0 || r == null) {
+                    r = document.createElement("div");
+                    r.className = "row";
+                    this.dom.appendChild(r)
+                }
+                r.appendChild(this.widgets[i].dom);
             }
 
+            this.dom.className = "container-fluid";
             document.body.appendChild(this.dom);
         }
     })();
@@ -102,7 +110,7 @@
     //取得表单数据
     var _vfAPIGetDAta = function () {
         var d = {};
-        for(var i = 0;i<this.widgets.length;i++) d[this.widgets[i].GetOption().id] = this.widgets[i].GetData();
+        for (var i = 0; i < this.widgets.length; i++) d[this.widgets[i].GetOption().id] = this.widgets[i].GetData();
         return d;
     }
     //设置表单数据
@@ -111,7 +119,7 @@
     };
     //检查表单数据有效性
     //返回：true / [{name,errinfo},...]
-    var _vfAPICheck = function(){
+    var _vfAPICheck = function () {
 
     }
 

@@ -1,5 +1,5 @@
 {
-    "column":1
+    "column":2
     ,"widgets":[
         {
             "id": "test2"
@@ -22,7 +22,7 @@
         }
         ,{
             "id": "tesx1"
-            , "select_name": "FunAreaText2", "type": "text", "name": "控件2"
+            , "select_name": "FunAreaText2", "type": "text", "name": "这是一个超长的文本标题测试相信实际应用中不会出现这么长的一个标题吧"
             , "align": "left","value":"这是默认值"
             , "validate": { "require": false }
         }
