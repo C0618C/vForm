@@ -21,6 +21,12 @@
     Ajax({url:"form.json"}).then(function(d){
         (new VForm()).Init(d);
     })
+    Ajax({url:"form.2.json"}).then(function(d){
+        (new VForm()).Init(d);
+    })
+    Ajax({url:"form.3.json"}).then(function(d){
+        (new VForm()).Init(d);
+    })
 
     window.$vf = vf
     

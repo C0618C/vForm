@@ -1,6 +1,6 @@
 {
-    "column":2
-    ,"title":"XX申请信息"
+    "column":3
+    ,"fieldset":[4,8]
     ,"widgets":[
         {
             "id": "test2"

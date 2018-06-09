@@ -88,17 +88,23 @@
             }
 
             this.dom = document.createElement("div");
+            if(s.title){
+                var tt = document.createElement("h4");
+                tt.innerText=s.title;
+                tt.className="bg-info"
+                this.dom.appendChild(tt);
+            }
             var r = null;
             for (var i = 0; i < this.widgets.length; i++) {
                 if (i % s.column == 0 || r == null) {
                     r = document.createElement("div");
-                    r.className = "row";
+                    r.className = "row vform_row";
                     this.dom.appendChild(r)
                 }
                 r.appendChild(this.widgets[i].dom);
             }
 
-            this.dom.className = "container-fluid vform";
+            this.dom.className = "container vform";
             document.body.appendChild(this.dom);
         }
     })();

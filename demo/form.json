@@ -1,6 +1,7 @@
 {
     "column":1
     ,"name_width":"240px;"
+    ,"title":"表单标题A"
     ,"widgets":[
         {
             "id": "test2"
