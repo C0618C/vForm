@@ -1,12 +1,14 @@
-# vForm Widget API
+# vForm Widget APIs
 
-## GetData()
+> ### GetData()
 > 参数  
-> 无  
+>   - 无 
+>
 > 返回值  
-> ``` js
-{
-text:string
-,value:any
-}
-```
+> ```Javascript 
+>{
+>   "text":string
+>   ,"value":any
+>}
+>```
+
