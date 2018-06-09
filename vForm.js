@@ -23,6 +23,7 @@
         this.Init = _vf_init;
         /* 动态更新配置 */
         this.SetOption = _vfAPISetOption;
+        this.GetOption = _vfAPIGetOption;
 
         /* 拿到表单数据 */
         this.GetData = _vfAPIGetDAta;
@@ -82,7 +83,7 @@
 
             var s = this.curSetting;
             for (var i = 0; i < config.widgets.length; i++) {
-                var widget = VFWidgetFactory.GetWidget(config.widgets[i]);
+                var widget = VFWidgetFactory.GetWidget(config.widgets[i], this);
                 this.widgets.push(widget);
             }
 
@@ -97,7 +98,7 @@
                 r.appendChild(this.widgets[i].dom);
             }
 
-            this.dom.className = "container-fluid";
+            this.dom.className = "container-fluid vform";
             document.body.appendChild(this.dom);
         }
     })();
@@ -106,6 +107,14 @@
         for (var cf in config) {
             this.curSetting[cf] = config[cf];
         }
+    }
+    var _vfAPIGetOption = function () {
+        var r = {};
+        for (var cf in this.curSetting) {
+            if (typeof (this.curSetting[cf]) !== "function" && cf != "widgets")
+                r[cf] = this.curSetting[cf];
+        }
+        return r;
     }
     //取得表单数据
     var _vfAPIGetDAta = function () {

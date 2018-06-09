@@ -19,7 +19,7 @@
         }
     }
     //根据配置 生成控件
-    var _vfwm_GetWidget = function (setting) {
+    var _vfwm_GetWidget = function (setting,vform) {
         var type = setting.type;
         var s = widget[type];
         if (s === undefined) {
@@ -27,7 +27,7 @@
             return false;
         }
 
-        var w = new s(setting);
+        var w = new s(setting,vform);
         return w;
     }
     var vf = new VFWidgetFactory();
@@ -37,7 +37,7 @@
 
 
 (function () {
-    function vfWidget(setting) {
+    function vfWidget(setting,vform) {
         this.data = {
             value: ""
             , text: ""
@@ -69,12 +69,14 @@
         this.SetOption = null;
         this.Check = null;
 
-        _v_widget_Init.call(this);
+        _v_widget_Init_bs.call(this,vform);
         return this;
     }
 
     //控件初始化
-    function _v_widget_Init() {
+    function _v_widget_Init(vform) {
+        var vs = vform.GetOption();
+
         this.dom = document.createElement("div");
         this.dom.className = "col vform_widget";
         if (this.curSetting.name === undefined) {
@@ -94,6 +96,41 @@
         this.cell.className = "vform_widget_cell";
 
     }
+    //Bootstrap 形式
+    function _v_widget_Init_bs(vform) {
+        var vs = vform.GetOption();
+        var a = 12 / vs.column;
+        var lw = 2;
+        var ow = 10;
+
+        this.dom = document.createElement("div");
+        this.dom.className = "form-group col-sm-"+a;
+        if (this.curSetting.name === undefined) {
+            this.cell = this.dom;
+        } else {
+            this.cell = document.createElement("div");
+            this.label = document.createElement("label");
+            this.label.className = "col-form-label col-sm-"+lw;
+            this.cell.className = "col-sm-"+ow;
+            this.label.innerText = this.curSetting.name;
+            this.dom.appendChild(this.label);
+            this.dom.appendChild(this.cell);
+        }
+    }
+    /*
+  <div class="form-group row">
+    <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
+    <div class="col-sm-10">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="email@example.com">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+    <div class="col-sm-10">
+      <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+    </div>
+  </div>
+    */
     function _v_widget_Create() {
         var obj = null;
         var s = this.curSetting;
@@ -162,15 +199,16 @@
 
 
     //定义控件    
-    VFWidgetFactory.AddWidget("text,number,password,button", function (setting) {
+    VFWidgetFactory.AddWidget("text,number,password,button,email,search,address", function (setting,vform) {
         //继承父类
-        vfWidget.call(this, setting);
+        vfWidget.call(this, setting,vform);
 
         //重载子类方法
         this._createDomObj = function () {
             var obj = document.createElement("input");
             obj.type = setting.type;
             if (setting.placeholder) obj.setAttribute("placeholder", setting.placeholder);
+            if(setting.type !== "button") obj.className="form-control vform_widget_text"
             var wg = this;
             obj.addEventListener("change", function () {
                 wg.SetData({ text: obj.value, value: obj.value }, false);
@@ -189,9 +227,9 @@
         this.Create();
         return this;
     });
-    VFWidgetFactory.AddWidget("textarea", function (setting) {
+    VFWidgetFactory.AddWidget("textarea", function (setting,vform) {
         //继承父类
-        vfWidget.call(this, setting);
+        vfWidget.call(this, setting,vform);
 
         //重载子类方法
         this._createDomObj = function () {
@@ -206,9 +244,9 @@
         this.Create();
         return this;
     });
-    VFWidgetFactory.AddWidget("checkbox,radio", function (setting) {
+    VFWidgetFactory.AddWidget("checkbox,radio", function (setting,vform) {
         //继承父类
-        vfWidget.call(this, setting);
+        vfWidget.call(this, setting,vform);
         var s = setting;
 
         //根据options里的选项，进行初始化
@@ -218,21 +256,27 @@
             if (!ss.options || ss.options.length == 0) return;
 
             for (var i = 0; i < ss.options.length; i++) {
+                var fc = document.createElement("div");
+                fc.className="form-check form-check-inline"
+
                 var o = document.createElement("input");
                 var id = MakeAnId(8);
                 o.type = s.type;
                 o.name = n;
                 o.value = ss.options[i].value;
                 o.id = id;
+                o.className = "form-check-input"
 
                 var l = document.createElement("label");
                 l.innerText = ss.options[i].text;
                 l.setAttribute("for", id);
+                l.className = "form-check-input"
 
-                this.cell.appendChild(o);
-                this.cell.appendChild(l);
+                fc.appendChild(o);
+                fc.appendChild(l);
+                this.cell.appendChild(fc);
             }
-            this.cell.className += " vform_widget_choice"
+            this.cell.className += " form-check"
         }
 
         //重载子类方法
@@ -251,9 +295,9 @@
         this.Create();
         return this;
     });
-    VFWidgetFactory.AddWidget("table", function (setting) {
+    VFWidgetFactory.AddWidget("table", function (setting,vform) {
         //继承父类
-        vfWidget.call(this, setting);
+        vfWidget.call(this, setting,vform);
 
         this.widgets = [];
         //重载子类方法
@@ -269,7 +313,7 @@
                 th.appendChild(hc);
 
                 var bc = document.createElement("td");
-                var w = VFWidgetFactory.GetWidget(s.widgets[c]);
+                var w = VFWidgetFactory.GetWidget(s.widgets[c],vform);
                 this.widgets.push(w);
                 bc.appendChild(w.cell);
                 tr.appendChild(bc);

@@ -15,6 +15,24 @@
             , "validate": { "require": false }
         }
         ,{
+            "id": "tesx1"
+            , "select_name": "FunAreaText2", "type": "address", "name": "地址"
+            , "align": "left"
+            , "validate": { "require": false }
+        }
+        ,{
+            "id": "tesx1"
+            , "select_name": "FunAreaText2", "type": "email", "name": "邮件"
+            , "align": "left"
+            , "validate": { "require": false }
+        }
+        ,{
+            "id": "tesx1"
+            , "select_name": "FunAreaText2", "type": "search", "name": "搜索"
+            , "align": "left"
+            , "validate": { "require": false }
+        }
+        ,{
             "id": "test2"
             , "select_name": "ss112", "type": "checkbox", "name": "多选"
             , "align": "left","options":[{"value":1,"text":"是"},{"value":0,"text":"否"}]
