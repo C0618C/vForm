@@ -87,11 +87,18 @@
                 this.widgets.push(widget);
             }
 
+            if(this.widgets.length === 1 && config.widgets[0].type==="table"){
+                this.dom = this.widgets[0].cell;
+                this.dom.className = "container vform vfTable";
+                document.body.appendChild(this.dom);
+                return;
+            }
+
             this.dom = document.createElement("table");
             this.dom.setAttribute("border", 1);
             for (var cl = 0; cl < s.column * 2; cl++) {
                 var c = document.createElement("col");
-                if (cl % 2 == 0) c.setAttribute("width", s.name_width || "240px");
+                if (cl % 2 == 0) c.setAttribute("width", s.name_width || "210px");
                 this.dom.appendChild(c);
             }
 

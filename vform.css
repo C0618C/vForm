@@ -20,6 +20,6 @@
     vertical-align: middle;
 }
 
-.vform .col-form-label{
-    padding: 4px 8px;
+.vform .col_form_label{
+    padding: 4px 8px;width:100%;text-align: right;
 }
