@@ -1,8 +1,11 @@
 
-.vform{border-bottom: 1px solid gray;margin-top: 30px;}
-.vform_row{border-top:1px solid gray;border-right: 1px solid gray;}
+.vform{margin-top: 30px;}
+.vform_row{border-bottom:1px solid gray;border-right: 1px solid gray;}
 .vform div.form-group{margin: 0px;border-right: 1px solid gray;border-bottom:1px solid gray;}
 .vform div.row .vform_widget_textarea,.vform div.row .vform_widget_text{border:none !important;height: 100%;}
 .vform div.row .vform_widget_text{height: 100%;}
 .vform div.row .col-form-label{border-right: 1px solid gray;}
 .vform div.box {border-left: 1px solid gray;}
+
+.vform .row,.vform .form-row {padding:0px;margin: 0px;}
+.vform .headtitle{padding: 5px 22px;border-bottom: 1px solid gray;margin-bottom: 0px;}

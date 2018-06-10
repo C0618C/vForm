@@ -249,7 +249,7 @@
 
             for (var i = 0; i < ss.options.length; i++) {
                 var fc = document.createElement("div");
-                fc.className = "form-check form-check-inline"
+                fc.className = "form-check form-check-inline align-middle"
 
                 var o = document.createElement("input");
                 var id = MakeAnId(8);

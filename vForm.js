@@ -91,7 +91,7 @@
             if(s.title){
                 var tt = document.createElement("h4");
                 tt.innerText=s.title;
-                tt.className="bg-info"
+                tt.className="bg-info headtitle"
                 this.dom.appendChild(tt);
             }
             var r = null;
