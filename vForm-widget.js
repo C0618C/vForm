@@ -73,29 +73,6 @@
         return this;
     }
 
-    //控件初始化
-    // function _v_widget_Init(vform) {
-    //     var vs = vform.GetOption();
-
-    //     this.dom = document.createElement("div");
-    //     this.dom.className = "col vform_widget";
-    //     if (this.curSetting.name === undefined) {
-    //         this.cell = this.dom;
-    //     } else {
-    //         var n = document.createElement("div");
-    //         n.className = "vform_widget_name";
-    //         this.cell = document.createElement("div");
-    //         this.label = document.createElement("label");
-    //         this.cell.className = "vform_widget_cell";
-    //         this.label.className = "vform_widget_label";
-    //         this.label.innerText = this.curSetting.name;
-    //         n.appendChild(this.label);
-    //         this.dom.appendChild(n);
-    //         this.dom.appendChild(this.cell);
-    //     }
-    //     this.cell.className = "vform_widget_cell";
-    // }
-
     //Bootstrap 形式
     function _v_widget_Init_bs(vform) {
         var vs = vform.GetOption();
@@ -103,6 +80,10 @@
         if (!vs.fieldset) vs.fieldset = [];
         var lw = vs.fieldset[0] || 2;
         var ow = vs.fieldset[1] || 10;
+
+        if(this.curSetting.colspan!=0 && this.curSetting.colspan>=2){
+            a *= this.curSetting.colspan;
+        }
 
         this.dom = document.createElement("div");
         this.dom.className = "form-row box col-xs-12 col-sm-" + a;

@@ -1,6 +1,7 @@
 {
     "column":2
     ,"title":"XX申请信息"
+    ,"theme":"light"
     ,"widgets":[
         {
             "id": "test2"

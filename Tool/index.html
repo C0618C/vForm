@@ -82,22 +82,23 @@
 
         function Init_Win(){
             var w = window.myChild;
+            var lc = window.location.origin;
             if(w===undefined){
                 //w = window.open("about:blank");
                 w = document.getElementById("i_f").contentWindow;
                 var cssList = [
                     "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
                     ,"https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css"
-                    ,window.location.origin+"/vform.css"
+                    ,lc+"/vform.css"
                 ];
                 var scriptList=[
                     "https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"
                     ,"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
                     ,"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
                     ,"https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"
-                    ,window.location.origin+"/common.js"
-                    ,window.location.origin+"/vForm.js"
-                    ,window.location.origin+"/vForm-widget.js"
+                    ,lc+"/common.js"
+                    ,lc+"/vForm.js"
+                    ,lc+"/vForm-widget.js"
                 ];
 
                 for(var c =0;c<cssList.length;c++){

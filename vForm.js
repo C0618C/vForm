@@ -88,10 +88,11 @@
             }
 
             this.dom = document.createElement("div");
+            if(s.theme === undefined) s.theme = "light";
             if (s.title) {
                 var tt = document.createElement("h4");
                 tt.innerText = s.title;
-                tt.className = "bg-info headtitle"
+                tt.className = "headtitle"+" bg-"+s.theme;
                 this.dom.appendChild(tt);
             }
             var r = null;
