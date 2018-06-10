@@ -118,7 +118,7 @@
             obj.id = MakeAnId(8) + "_" + s.id;
             this.ctrlId = obj.id;
             if (this.label) this.label.setAttribute("for", this.ctrlId);
-            if (s.cls) this.cell.class = this.cell.class + " " + s.cls;
+            if (s.cls) this.cell.className = this.cell.className + " " + s.cls;
             if (s.select_name) obj.name = s.select_name;
             if (s.value !== undefined) this.SetValue(s.value);
 
@@ -190,7 +190,13 @@
         //重载子类方法
         this._createDomObj = function () {
             var obj = document.createElement("input");
-            obj.type = setting.type;
+            try{
+                obj.type = setting.type;
+            }catch(e){
+                obj.type ="text";
+                console.log("浏览器不支持类型："+setting.type+"，已使用text替代。");
+            }
+
             if (setting.placeholder) obj.setAttribute("placeholder", setting.placeholder);
             if (setting.type !== "button") obj.className = "form-control vform_widget_text"
             var wg = this;

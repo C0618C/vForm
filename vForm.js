@@ -59,7 +59,7 @@
                     (function (a) {
                         console[a] = function (x, y, z) {
                             if (!vf.status.debug.isdebug) return;
-                            if (a != "trace") _console.trace();
+                            //if (a != "trace" && _console.trace) _console.trace();
                             return _console[a](x, y, z);
                         }
                     })(a);
@@ -104,8 +104,8 @@
                     r.className = "row vform_row";
                     this.dom.appendChild(r)
                 }
+                rC += w.GetOption().colspan;                
                 r.appendChild(w.dom);
-                rC += w.GetOption().colspan;
             }
 
             this.dom.className = "container vform";
