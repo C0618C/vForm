@@ -1,4 +1,4 @@
-(function () {
+(function (global) {
     function VForm() {
         //--------------------Attributes------------------
         /* 表单当前数据 */
@@ -88,10 +88,10 @@
             }
 
             this.dom = document.createElement("div");
-            if(s.title){
+            if (s.title) {
                 var tt = document.createElement("h4");
-                tt.innerText=s.title;
-                tt.className="bg-info headtitle"
+                tt.innerText = s.title;
+                tt.className = "bg-info headtitle"
                 this.dom.appendChild(tt);
             }
             var r = null;
@@ -139,9 +139,8 @@
     }
 
 
+    global.VForm = VForm;
 
-
-
-
-    window.VForm = VForm;
-})();
+    console.log(global);
+    return VForm;
+}(typeof window !== "undefined" ? window : this));
