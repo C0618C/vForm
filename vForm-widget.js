@@ -81,8 +81,12 @@
         var lw = vs.fieldset[0] || 2;
         var ow = vs.fieldset[1] || 10;
 
-        if(this.curSetting.colspan!=0 && this.curSetting.colspan>=2){
-            a *= this.curSetting.colspan;
+        if (this.curSetting.colspan != 0 && this.curSetting.colspan >= 2 && this.curSetting.colspan <= vs.column) {
+                a *= this.curSetting.colspan;
+                lw /= this.curSetting.colspan;
+                ow = 12 - lw;
+        }else{
+            this.curSetting.colspan = 1;
         }
 
         this.dom = document.createElement("div");

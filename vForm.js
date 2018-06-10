@@ -96,13 +96,16 @@
                 this.dom.appendChild(tt);
             }
             var r = null;
+            var rC = 0;
             for (var i = 0; i < this.widgets.length; i++) {
-                if (i % s.column == 0 || r == null) {
+                var w = this.widgets[i];
+                if (rC % s.column == 0 || r == null) {
                     r = document.createElement("div");
                     r.className = "row vform_row";
                     this.dom.appendChild(r)
                 }
-                r.appendChild(this.widgets[i].dom);
+                r.appendChild(w.dom);
+                rC += w.GetOption().colspan;
             }
 
             this.dom.className = "container vform";
