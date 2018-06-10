@@ -82,22 +82,22 @@
         var ow = vs.fieldset[1] || 10;
 
         if (this.curSetting.colspan != 0 && this.curSetting.colspan >= 2 && this.curSetting.colspan <= vs.column) {
-                a *= this.curSetting.colspan;
-                lw /= this.curSetting.colspan;
-                ow = 12 - lw;
+            a *= this.curSetting.colspan;
+            lw /= this.curSetting.colspan;
+            ow = 12 - lw;
         }else{
             this.curSetting.colspan = 1;
         }
 
         this.dom = document.createElement("div");
-        this.dom.className = "form-row box col-xs-12 col-sm-" + a;
+        this.dom.className = "form_vf_row box col_xs_12 col_sm_" + a;
         if (this.curSetting.name === undefined) {
             this.cell = this.dom;
         } else {
             this.cell = document.createElement("div");
             this.label = document.createElement("label");
-            this.label.className = "col-form-label col-xs-2  col-sm-" + lw;
-            this.cell.className = "col-xs-10 col-sm-" + ow;
+            this.label.className = "col_form_label col_xs_2  col_sm_" + lw;
+            this.cell.className = "col_xs_10 col_sm_" + ow;
             this.label.innerText = this.curSetting.name;
             this.dom.appendChild(this.label);
             this.dom.appendChild(this.cell);
@@ -198,11 +198,11 @@
             }
 
             if (setting.placeholder) obj.setAttribute("placeholder", setting.placeholder);
-            if (setting.type !== "button") obj.className = "form-control vform_widget_text"
+            if (setting.type !== "button") obj.className = "form_control vform_widget_text"
             var wg = this;
-            obj.addEventListener("change", function () {
-                wg.SetData({ text: obj.value, value: obj.value }, false);
-            });
+            // obj.addEventListener("change", function () {
+            //     wg.SetData({ text: obj.value, value: obj.value }, false);
+            // });
             return obj;
         }
 
@@ -216,11 +216,11 @@
         //重载子类方法
         this._createDomObj = function () {
             var obj = document.createElement("textarea");
-            obj.className = "form-control vform_widget_textarea"
+            obj.className = "form_control vform_widget_textarea"
             var wg = this;
-            obj.addEventListener("change", function () {
-                wg.SetData({ text: obj.value, value: obj.value }, false);
-            });
+            // obj.addEventListener("change", function () {
+            //     wg.SetData({ text: obj.value, value: obj.value }, false);
+            // });
             return obj;
         }
 
@@ -240,7 +240,7 @@
 
             for (var i = 0; i < ss.options.length; i++) {
                 var fc = document.createElement("div");
-                fc.className = "form-check form-check-inline align-middle"
+                fc.className = "form_check form_check_inline align_middle"
 
                 var o = document.createElement("input");
                 var id = MakeAnId(8);
@@ -248,18 +248,18 @@
                 o.name = n;
                 o.value = ss.options[i].value;
                 o.id = id;
-                o.className = "form-check-input"
+                o.className = "form_check_input"
 
                 var l = document.createElement("label");
                 l.innerText = ss.options[i].text;
                 l.setAttribute("for", id);
-                l.className = "form-check-input"
+                l.className = "form_check_input"
 
                 fc.appendChild(o);
                 fc.appendChild(l);
                 this.cell.appendChild(fc);
             }
-            this.cell.className += " form-check"
+            this.cell.className += " form_check"
         }
 
         //重载子类方法
@@ -310,7 +310,7 @@
             obj.appendChild(tbody);
 
             if (s.DataTable === true) {
-                obj.setAttribute("class", "table table-bordered");
+                obj.setAttribute("class", "table table_bordered");
                 $(obj).DataTable();
             }
             return obj;

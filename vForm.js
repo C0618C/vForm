@@ -87,12 +87,19 @@
                 this.widgets.push(widget);
             }
 
-            this.dom = document.createElement("div");
-            if(s.theme === undefined) s.theme = "light";
+            this.dom = document.createElement("table");
+            this.dom.setAttribute("border", 1);
+            for (var cl = 0; cl < s.column * 2; cl++) {
+                var c = document.createElement("col");
+                if (cl % 2 == 0) c.setAttribute("width", s.name_width || "240px");
+                this.dom.appendChild(c);
+            }
+
+            if (s.theme === undefined) s.theme = "light";
             if (s.title) {
-                var tt = document.createElement("h4");
+                var tt = document.createElement("caption");
                 tt.innerText = s.title;
-                tt.className = "headtitle"+" bg-"+s.theme;
+                tt.className = "headtitle" + " bg-" + s.theme;
                 this.dom.appendChild(tt);
             }
             var r = null;
@@ -100,12 +107,25 @@
             for (var i = 0; i < this.widgets.length; i++) {
                 var w = this.widgets[i];
                 if (rC % s.column == 0 || r == null) {
-                    r = document.createElement("div");
-                    r.className = "row vform_row";
-                    this.dom.appendChild(r)
+                    r = document.createElement("tr");
+                    r.className = "vf_row vform_row";
                 }
-                rC += w.GetOption().colspan;                
-                r.appendChild(w.dom);
+                rC += 1;
+
+                var d = document.createElement("td");
+                if (w.label) d.appendChild(w.label);
+                r.appendChild(d);
+                var c = document.createElement("td");
+                if (w.cell) c.appendChild(w.cell);
+                r.appendChild(c);
+
+                this.dom.appendChild(r);
+            }
+
+            if (this.widgets.length % s.column !== 0) {
+                var c = document.createElement("td");
+                c.setAttribute("colspan", (s.column - this.widgets.length % s.column) * 2);
+                r.appendChild(c);
             }
 
             this.dom.className = "container vform";
