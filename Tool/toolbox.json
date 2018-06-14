@@ -1,0 +1,39 @@
+[
+    {
+        "id": "test2"
+        , "select_name": "ss1123", "type": "radio", "name": "单选"
+        , "align": "left","options":[{"value":1,"text":"是"},{"value":0,"text":"否"}]
+        , "validate": { "require": false }
+    }
+    ,{
+        "id": "test2"
+        , "select_name": "ss112", "type": "checkbox", "name": "多选"
+        , "align": "left","options":[{"value":1,"text":"选项一"},{"value":0,"text":"选项二"},{"value":1,"text":"选项三"}]
+        , "validate": { "require": false }
+    }
+    ,{
+        "id": "tesx1"
+        , "select_name": "FunAreaText2", "type": "text", "name": "文本框"
+        , "align": "left"
+        , "validate": { "require": false }
+    }
+    ,{
+        "id": "tesx1"
+        , "select_name": "FunAreaText2", "type": "address", "name": "数字"
+        , "align": "left","placeholder":"请输入数字"
+        , "validate": { "require": false }
+    }
+    ,{
+        "id": "tesx1"
+        , "select_name": "FunAreaText2", "type": "password", "name": "密码"
+        , "align": "left","placeholder":"请输入密码"
+        , "validate": { "require": false }
+    }
+    ,{
+        "id": "tesx1"
+        , "select_name": "FunAreaText2", "type": "address", "name": "地址"
+        , "align": "left"
+        , "validate": { "require": false }
+    }
+
+]

@@ -1,7 +1,8 @@
 * {box-sizing: border-box;}
 .vform{  
     border-collapse:collapse;  
-    border-spacing:0;  
+    border-spacing:0;
+    margin-top: 25px;
 }  
      
 .vform th,.vform td{  
@@ -10,7 +11,8 @@
      
 .vform .vform_widget_text,
 .vform .vform_widget_textarea{
-    width:100%;height:100%;border:none;
+    width:100%;height:100%;border:none;padding: 5px 5px;border: 1px dashed #ccc;
+    border-radius: 2px 2px;
 }
 
 .vform .form_check_inline{
@@ -22,4 +24,11 @@
 
 .vform .col_form_label{
     padding: 4px 8px;width:100%;text-align: right;
+}
+.vform caption{
+    caption-side: inherit;
+}
+.vform .headtitle{padding-left: 20px;}
+.vform .headtitle.bg-secondary{
+    color:white;
 }

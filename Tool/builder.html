@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>vForm Builder</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../vform.css" />
+
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="//cdn.bootcss.com/ace/1.3.3/ace.js"></script>
+
+    <link href='https://bevacqua.github.io/dragula/dist/dragula.css' rel='stylesheet' type='text/css' />
+    <script src='https://bevacqua.github.io/dragula/dist/dragula.js'></script>
+
+    <script src="../common.js"></script>
+    <script src="../vForm.js"></script>
+    <script src="../vForm-widget.js"></script>
+
+    <style>
+        .form_vf_row {
+            display: flex;
+        }
+
+        .form_vf_row>label {
+            width: 210px;
+            text-align: right;
+            padding: 5px 5px;
+        }
+
+        .form_vf_row>.form_check {
+            border-left: 1px solid gray;
+        }
+
+        .form_vf_row .form_check_inline {
+            float: left;margin: 5px 0px 0px 5px;
+        }
+        .form_vf_row .vform_widget_text{width: 100%;min-width: 233px;padding: 5px 5px;margin-top: 2px;}
+
+        .container-sidebar,
+        .container-header,
+        .container-body,
+        .form_vf_row {
+            border: 1px solid gray;
+        }
+
+        .container-header {
+            margin-bottom: .5rem;
+            height: 3rem;
+        }
+
+        .container-sidebar {
+            height: 60rem;
+        }
+        #toolbar .form_vf_row{
+            margin: 8px 0px;
+        }
+
+        .container-body #containbody {
+            display: inline-flex;
+        }
+
+        #containbody table{width: 100%;}
+        #containbody table tr td {
+            border: 1px solid gray;
+            width: 50%;
+            height: 3rem;
+        }
+    </style>
+</head>
+
+<body class="container-fluid">
+
+    <div class="container-header form-inline">
+        <duv class="ml-5">布局</duv>
+        <div class="form-group">
+            <label for="colset" class="ml-5">列：</label>
+            <select class="form-control layout_select" id="colset">
+                <option value="0">请选择</option>                    
+                <option>1</option>
+                <option selected="selected">2</option>
+                <option>3</option>
+                <option>4</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="rowset" class="ml-5">行：</label>
+            <select class="form-control layout_select" id="rowset">
+                <option value="0">请选择</option>                    
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+                <option>9</option>
+                <option>10</option>
+            </select>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="container-sidebar col-4" id="toolbar"></div>
+        <div class="container-body col-8" id="containbody">
+
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        (function () {
+            $(".layout_select").on("change",InitLayout);
+            $.getJSON("toolbox.json", function (tools) {
+                var toolbox = $("#toolbar")
+                for (var i = 0; i < tools.length; i++) {
+                    var t = VFWidgetFactory.GetWidget(tools[i]);
+                    toolbox.append(t.dom)
+                }
+            });
+            // dragula([document.getElementById("toolbar"),], {
+            //     copy: function (el, source) {
+            //         return source === document.getElementById("toolbar")
+            //     },
+            //     accepts: function (el, target) {
+            //         console.log(target)
+            //         return true;
+            //     }
+            // });
+        })();
+
+        var dragulaHandler = null
+        function InitLayout(e){
+            var r = $("#rowset").val()*1;
+            var c = $("#colset").val()*1;
+            if(r=="0"||c=="0")return;
+            var cols = "";
+            var tb = "";
+            for(var i=0;i<c;i++) cols += "<td></td>";
+            for(var j=0;j<r;j++) tb += "<tr>"+cols+"</tr>";
+            $("#containbody").html("<table>"+tb+"</table>");
+
+            var container = document.getElementById("containbody").getElementsByTagName("td");
+
+            if(dragulaHandler) dragulaHandler.destroy();
+            dragulaHandler = dragula([document.getElementById("toolbar"),...container], {
+                copy: function (el, source) {
+                    return source === document.getElementById("toolbar")
+                },
+                accepts: function (el, target) {
+                    return $(target).find(".form_vf_row").length <=1;
+                }
+            });
+
+            dragulaHandler.on("cloned",function(clone, original, type){
+                $(clone).find("label").attr("contenteditable",true).removeAttr("for").attr("");
+            })
+        }
+    </script>
+</body>
+
+</html>

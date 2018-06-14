@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Test it</title>
+    <link href='https://bevacqua.github.io/dragula/dist/dragula.css' rel='stylesheet' type='text/css' />
+    <script src='https://bevacqua.github.io/dragula/dist/dragula.js'></script>
+    <style>
+        .bd{            display:flex;}
+        .item{
+            width:300px;height:30px;
+            border: 1px solid gray;
+            margin: 2px 2px;
+        }
+        .left,.right{
+            width:340px;height: 800px;
+            border: 1px solid gray;
+        }
+
+    </style>
+</head>
+
+<body class="bd">
+    <div class="left container vform" id="left">
+        <div class="item">A</div>
+        <div class="item">B</div>
+        <div class="item">C</div>
+        <div class="item">D</div>
+        <div class="item">E</div>
+    </div>
+
+    <div class="right container" id="right"></div>
+
+    <script type="text/javascript">
+        dragula([document.getElementById("left"), document.getElementById("right")], {
+            copy: true
+        });
+    </script>
+</body>
+
+</html>

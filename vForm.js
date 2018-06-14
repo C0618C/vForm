@@ -111,6 +111,7 @@
             }
             var r = null;
             var rC = 0;
+            var tbd = document.createElement("tbody");
             for (var i = 0; i < this.widgets.length; i++) {
                 var w = this.widgets[i];
                 if (rC % s.column == 0 || r == null) {
@@ -126,8 +127,9 @@
                 if (w.cell) c.appendChild(w.cell);
                 r.appendChild(c);
 
-                this.dom.appendChild(r);
+                tbd.appendChild(r);
             }
+            this.dom.appendChild(tbd);
 
             if (this.widgets.length % s.column !== 0) {
                 var c = document.createElement("td");

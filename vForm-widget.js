@@ -75,8 +75,8 @@
 
     //Bootstrap 形式
     function _v_widget_Init_bs(vform) {
-        var vs = vform.GetOption();
-        var a = 12 / vs.column;
+        var vs = vform?vform.GetOption():{};
+        var a = 12 / (vs.column||1);
         if (!vs.fieldset) vs.fieldset = [];
         var lw = vs.fieldset[0] || 2;
         var ow = vs.fieldset[1] || 10;
@@ -97,7 +97,7 @@
             this.cell = document.createElement("div");
             this.label = document.createElement("label");
             this.label.className = "col_form_label col_xs_2  col_sm_" + lw;
-            this.cell.className = "col_xs_10 col_sm_" + ow;
+            this.cell.className = "vform_cell col_xs_10 col_sm_" + ow;
             this.label.innerText = this.curSetting.name;
             this.dom.appendChild(this.label);
             this.dom.appendChild(this.cell);

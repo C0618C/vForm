@@ -1,4 +1,4 @@
-function ({
+function Ajax({
     method = "POST", url = ""
     , data = ""            //param for send
     , async = true         //true（异步）或 false（同步）
