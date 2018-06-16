@@ -19,7 +19,7 @@
     }
     ,{
         "id": "tesx1"
-        , "select_name": "FunAreaText2", "type": "address", "name": "数字"
+        , "select_name": "FunAreaText2", "type": "number", "name": "数字"
         , "align": "left","placeholder":"请输入数字"
         , "validate": { "require": false }
     }

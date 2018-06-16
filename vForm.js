@@ -173,7 +173,5 @@
 
 
     global.VForm = VForm;
-
-    console.log(global);
     return VForm;
 }(typeof window !== "undefined" ? window : this));

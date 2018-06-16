@@ -37,9 +37,16 @@
         }
 
         .form_vf_row .form_check_inline {
-            float: left;margin: 5px 0px 0px 5px;
+            float: left;
+            margin: 5px 0px 0px 5px;
         }
-        .form_vf_row .vform_widget_text{width: 100%;min-width: 233px;padding: 5px 5px;margin-top: 2px;}
+
+        .form_vf_row .vform_widget_text {
+            width: 100%;
+            min-width: 233px;
+            padding: 5px 5px;
+            margin-top: 2px;
+        }
 
         .container-sidebar,
         .container-header,
@@ -56,7 +63,8 @@
         .container-sidebar {
             height: 60rem;
         }
-        #toolbar .form_vf_row{
+
+        #toolbar .form_vf_row {
             margin: 8px 0px;
         }
 
@@ -64,11 +72,26 @@
             display: inline-flex;
         }
 
-        #containbody table{width: 100%;}
+        #containbody table {
+            width: 100%;
+        }
+
         #containbody table tr td {
             border: 1px solid gray;
             width: 50%;
             height: 3rem;
+        }
+
+        .builder .form_vf_row {
+            padding: 3px 0px 5px 1px;
+        }
+
+        .builder .col_form_label {
+            margin-top: 8px;
+        }
+
+        .builder .form_vf_row:hover {
+            outline: red auto 5px;
         }
     </style>
 </head>
@@ -80,7 +103,7 @@
         <div class="form-group">
             <label for="colset" class="ml-5">列：</label>
             <select class="form-control layout_select" id="colset">
-                <option value="0">请选择</option>                    
+                <option value="0">请选择</option>
                 <option>1</option>
                 <option selected="selected">2</option>
                 <option>3</option>
@@ -90,7 +113,7 @@
         <div class="form-group">
             <label for="rowset" class="ml-5">行：</label>
             <select class="form-control layout_select" id="rowset">
-                <option value="0">请选择</option>                    
+                <option value="0">请选择</option>
                 <option>1</option>
                 <option>2</option>
                 <option>3</option>
@@ -103,6 +126,12 @@
                 <option>10</option>
             </select>
         </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-primary">运行</button>
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-primary">预览</button>
+        </div>
 
     </div>
     <div class="row">
@@ -113,54 +142,84 @@
     </div>
 
 
+    <!-- 控件属性窗口 -->
+    <div id="widget_setting" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">b</div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3 input-group">
+                            <div class="input-group-prepend"><span class="input-group-text">名称</span></div>
+                            <input type="text" class="form-control" id="widget_name" />
+                        </div>
+
+                        <div class="col-md-3 ml-auto">.col-md-4 .ml-auto</div>
+                    </div>
+                    <hr/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script type="text/javascript">
         (function () {
-            $(".layout_select").on("change",InitLayout);
+            $(".layout_select").on("change", InitLayout);
             $.getJSON("toolbox.json", function (tools) {
                 var toolbox = $("#toolbar")
                 for (var i = 0; i < tools.length; i++) {
                     var t = VFWidgetFactory.GetWidget(tools[i]);
+                    $(t.dom).data("setting", tools[i]);
                     toolbox.append(t.dom)
                 }
             });
-            // dragula([document.getElementById("toolbar"),], {
-            //     copy: function (el, source) {
-            //         return source === document.getElementById("toolbar")
-            //     },
-            //     accepts: function (el, target) {
-            //         console.log(target)
-            //         return true;
-            //     }
-            // });
         })();
 
         var dragulaHandler = null
-        function InitLayout(e){
-            var r = $("#rowset").val()*1;
-            var c = $("#colset").val()*1;
-            if(r=="0"||c=="0")return;
+        function InitLayout(e) {
+            var r = $("#rowset").val() * 1;
+            var c = $("#colset").val() * 1;
+            if (r == "0" || c == "0") return;
             var cols = "";
             var tb = "";
-            for(var i=0;i<c;i++) cols += "<td></td>";
-            for(var j=0;j<r;j++) tb += "<tr>"+cols+"</tr>";
-            $("#containbody").html("<table>"+tb+"</table>");
+            for (var i = 0; i < c; i++) cols += "<td></td>";
+            for (var j = 0; j < r; j++) tb += "<tr>" + cols + "</tr>";
+            $("#containbody").html("<table class='vform builder'><caption style='caption-side:inherit;'>这是标题</caption>" + tb + "</table>");
 
             var container = document.getElementById("containbody").getElementsByTagName("td");
 
-            if(dragulaHandler) dragulaHandler.destroy();
-            dragulaHandler = dragula([document.getElementById("toolbar"),...container], {
+            if (dragulaHandler) dragulaHandler.destroy();
+            dragulaHandler = dragula([document.getElementById("toolbar"), ...container], {
                 copy: function (el, source) {
                     return source === document.getElementById("toolbar")
                 },
                 accepts: function (el, target) {
-                    return $(target).find(".form_vf_row").length <=1;
+                    return $(target).find(".form_vf_row").length <= 1;
                 }
             });
 
-            dragulaHandler.on("cloned",function(clone, original, type){
-                $(clone).find("label").attr("contenteditable",true).removeAttr("for").attr("");
-            })
+            dragulaHandler.on("cloned", function (clone, original, type) {
+                $(clone).find("label").attr("contenteditable", true).removeAttr("for").attr("");
+                $(original).data("setting", $(clone).data("setting"))
+                $(clone).find("[id]").each(function (index, obj) {
+                    obj.id = MakeAnId(16);
+                });
+                clone.addEventListener("dblclick", function () {
+                    $("#widget_setting").modal("show");
+                });
+            });
         }
+
+        $("#widget_setting").on("show.bs.modal", function () {
+            //
+        });
+
     </script>
 </body>
 
