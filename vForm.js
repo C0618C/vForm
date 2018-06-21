@@ -44,6 +44,22 @@
         return this;
     }
 
+    // *********************** 定义vForm的静态对象及静态方法 *****************************
+    //所有实例化成功的静态对象列表 在Init方法里注册
+    Object.getPrototypeOf(VForm).vFormObject = [];
+    
+    //根据传入参数（id/name），找出需要获取的vForm对象
+    Object.getPrototypeOf(VForm).$ = function(param){
+        var param = param.replace(/^[#\s]+|\s+$/,"");
+        for(var x in VForm.vFormObject){
+            if(x.curSetting.id === param){
+                return VForm.vFormObject[x];
+            }
+            return null;
+        }
+    };
+
+
     //构造函数
     var _constructor = (function () {
         return function (vf) {
@@ -139,6 +155,8 @@
 
             this.dom.className = "container vform";
             document.body.appendChild(this.dom);
+
+            VForm.vFormObject.push(this);
         }
     })();
     //根据配置初始化
@@ -170,7 +188,6 @@
     var _vfAPICheck = function () {
 
     }
-
 
     global.VForm = VForm;
     return VForm;

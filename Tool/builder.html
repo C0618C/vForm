@@ -148,15 +148,8 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">b</div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-3 input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">名称</span></div>
-                            <input type="text" class="form-control" id="widget_name" />
-                        </div>
+                <div class="modal-body" id="modal_body_info">
 
-                        <div class="col-md-3 ml-auto">.col-md-4 .ml-auto</div>
-                    </div>
                     <hr/>
                 </div>
                 <div class="modal-footer">
@@ -205,13 +198,28 @@
             });
 
             dragulaHandler.on("cloned", function (clone, original, type) {
-                $(clone).find("label").attr("contenteditable", true).removeAttr("for").attr("");
-                $(original).data("setting", $(clone).data("setting"))
+                $(clone).find("label").attr("contenteditable", true).removeAttr("for");
+                $(clone).data("setting", $(original).data("setting"))
                 $(clone).find("[id]").each(function (index, obj) {
                     obj.id = MakeAnId(16);
                 });
                 clone.addEventListener("dblclick", function () {
                     $("#widget_setting").modal("show");
+                    var template = '<div class="col-md-4 input-group">\
+                        <div class="input-group-prepend"><span class="input-group-text">${name}</span></div>\
+                        <input type="text" class="form-control" id="widget_s${i}" value="${val}"/></div>';
+                    var c= 1;
+                    var ostring = '<div class="row">';
+                    var setting =$(this).data("setting");
+                    for(var x in setting){
+                        if(x=="type" || x == "validate")continue;
+                        var rsl = {name:x,val:setting[x],i:c};
+                        ostring += template.replace(/\$\{([^{}]*?)\}/ig,function(m,k){console.log(k,rsl[k]);return rsl[k];});
+                        if(c%3==0)ostring +='</div><div class="row">';
+                        c++;
+                    }
+                    ostring +='</div>';
+                    $("#modal_body_info").html(ostring);
                 });
             });
         }
