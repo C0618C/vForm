@@ -10,10 +10,11 @@
         /* vForm 状态 */
         this.status = {
             name: "vForm"
-            , version: [0, 0, 1]                 //版本号
+            , version: [0, 0, 2]                 //版本号
             , debug: {
                 isdebug: true                //是否调试模式
             }
+            ,lang:"zh-CN"
         };
         this.widgets = [];
         this.dom = null;
@@ -29,7 +30,8 @@
         this.GetData = _vfAPIGetDAta;
         /* 设置表单数据 */
         this.SetData = _vfAPISetDAta;
-        /*  */
+        /* 设置语言 */
+        this.SetLanguage = _vfAPISetLanguage;
         /*  */
         /*  */
         /*  */
@@ -47,16 +49,16 @@
     // *********************** 定义vForm的静态对象及静态方法 *****************************
     //所有实例化成功的静态对象列表 在Init方法里注册
     Object.getPrototypeOf(VForm).vFormObject = [];
-    
+
     //根据传入参数（id/name），找出需要获取的vForm对象
-    Object.getPrototypeOf(VForm).$ = function(param){
-        var param = param.replace(/^[#\s]+|\s+$/,"");
-        for(var x in VForm.vFormObject){
-            if(x.curSetting.id === param){
+    Object.getPrototypeOf(VForm).$ = function (param) {
+        var param = param.replace(/^[#\s]+|\s+$/, "");
+        for (var x in VForm.vFormObject) {
+            if (VForm.vFormObject[x].curSetting.id === param) {
                 return VForm.vFormObject[x];
             }
-            return null;
         }
+        return null;
     };
 
 
@@ -103,7 +105,7 @@
                 this.widgets.push(widget);
             }
 
-            if(this.widgets.length === 1 && config.widgets[0].type==="table"){
+            if (this.widgets.length === 1 && config.widgets[0].type === "table") {
                 this.dom = this.widgets[0].cell;
                 this.dom.className = "container vform vfTable";
                 document.body.appendChild(this.dom);
@@ -173,6 +175,12 @@
         }
         return r;
     }
+
+    //设置语言
+    var _vfAPISetLanguage = function(language){
+        this.status.lang = language;
+    }
+
     //取得表单数据
     var _vfAPIGetDAta = function () {
         var d = {};
@@ -186,7 +194,16 @@
     //检查表单数据有效性
     //返回：true / [{name,errinfo},...]
     var _vfAPICheck = function () {
+        var result = [];
 
+        for (var w = 0; w < this.widgets.length; w++) {
+            var r = this.widgets[w].Check();
+            if (r !== true) {
+                result.push(r);
+            }
+        }
+
+        return result.length === 0 ? true : result;
     }
 
     global.VForm = VForm;

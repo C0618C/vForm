@@ -62,12 +62,12 @@
         this.ToString = _v_widget_ToString;
         this.Create = _v_widget_Create;
         this.GetOption = _v_widget_GetOption;
-
+        this.Check = _v_widget_Check;
+        
         //需要重载的API
         this.Refresh = _v_widget_Refresh;           //用于将值同步到控件上
         this._createDomObj = null;      //创建实际的控件
         this.SetOption = null;
-        this.Check = null;
 
         _v_widget_Init_bs.call(this, vform);
         return this;
@@ -173,13 +173,23 @@
     }
 
     function _v_widget_Refresh() {
-
         if (this.IsCtrl()) {
             this.ctrlObj.value = this.GetValue();
         } else {
             //document.getElementById(this.ctrlId).innerText = this.GetText();
         }
+    }
 
+    //校验各个控件
+    function _v_widget_Check(){
+        if(VForm.Validate){
+            for(var x in this.curSetting.validate){
+                var options = this.curSetting.validate[x];
+                var rsl = VForm.Validate[x]?VForm.Validate[x](this,options):true;
+                if(rsl!==true) return {name:this.curSetting.name,errinfo:rsl};
+            }
+        }
+        return true;
     }
 
     //定义控件    
