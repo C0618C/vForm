@@ -136,6 +136,7 @@
     }
 
     function _v_widget_GetData() {
+        if(this.data.text === this.data.value) return this.data.value;
         return this.data;
     }
     function _v_widget_GetText() {
@@ -210,10 +211,16 @@
             if (setting.placeholder) obj.setAttribute("placeholder", setting.placeholder);
             if (setting.type !== "button") obj.className = "form_control vform_widget_text"
             var wg = this;
-            // obj.addEventListener("change", function () {
-            //     wg.SetData({ text: obj.value, value: obj.value }, false);
-            // });
+            obj.addEventListener("change", function () {
+                wg.SetData({ text: obj.value, value: obj.value }, false);
+            });
             return obj;
+        }
+
+        super_SetValue = this.SetValue;
+        this.SetValue = function(value){
+            super_SetValue.call(this,value,false);
+            this.SetText(value);
         }
 
         this.Create();
@@ -234,6 +241,12 @@
             return obj;
         }
 
+        super_SetValue = this.SetValue;
+        this.SetValue = function(value){
+            super_SetValue.call(this,value,false);
+            this.SetText(value);
+        }
+        
         this.Create();
         return this;
     });
