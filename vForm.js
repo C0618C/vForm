@@ -27,9 +27,9 @@
         this.GetOption = _vfAPIGetOption;
 
         /* 拿到表单数据 */
-        this.GetData = _vfAPIGetDAta;
+        this.GetData = _vfAPIGetData;
         /* 设置表单数据 */
-        this.SetData = _vfAPISetDAta;
+        this.SetData = _vfAPISetData;
         /* 设置语言 */
         this.SetLanguage = _vfAPISetLanguage;
         /*  */
@@ -182,13 +182,18 @@
     }
 
     //取得表单数据
-    var _vfAPIGetDAta = function () {
+    var _vfAPIGetData = function (idx) {
+        idx = idx || "id";
         var d = {};
-        for (var i = 0; i < this.widgets.length; i++) d[this.widgets[i].GetOption().id] = this.widgets[i].GetData();
+        for (var i = 0; i < this.widgets.length; i++){
+            var sname = this.widgets[i].GetOption()[idx];
+            if(!sname) continue;
+            d[sname] = this.widgets[i].GetData();
+        } 
         return d;
     }
     //设置表单数据
-    var _vfAPISetDAta = function () {
+    var _vfAPISetData = function () {
 
     };
     //检查表单数据有效性

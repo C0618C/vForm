@@ -12,25 +12,25 @@
 
         ,{
             "id": "tesx2"
-            , "select_name": "FunAreaText2", "type": "password", "name": "控件2"
+            , "type": "password", "name": "控件2"
             , "align": "left","placeholder":"这是密码"
             , "validate": { "require": false }
         }
         ,{
             "id": "tesx3"
-            , "select_name": "FunAreaText2", "type": "address", "name": "地址"
+            , "select_name": "tesx3_3", "type": "address", "name": "地址"
             , "align": "left"
             , "validate": { "require": true }
         }
         ,{
             "id": "tesx4"
-            , "select_name": "FunAreaText2", "type": "email", "name": "邮件"
+            , "select_name": "tesx4_4", "type": "email", "name": "邮件"
             , "align": "left"
             , "validate": { "require": true }
         }
         ,{
             "id": "tesx5"
-            , "select_name": "FunAreaText2", "type": "search", "name": "搜索"
+            , "select_name": "tesx5_5", "type": "search", "name": "搜索"
             , "align": "left"
             , "validate": { "require": false }
         }
@@ -42,19 +42,19 @@
         }
         ,{
             "id": "tesx7"
-            , "select_name": "FunAreaText2", "type": "textarea", "name": "这是一个超长的文本标题测试相信实际应用中不会出现这么长的一个标题吧"
+            , "select_name": "tesx7_7", "type": "textarea", "name": "这是一个超长的文本标题测试相信实际应用中不会出现这么长的一个标题吧"
             , "align": "left","value":"这是默认值"
             , "validate": { "require": false }
         }
         ,{
             "id": "tesx8"
-            , "select_name": "FunAreaText2", "type": "text", "name": "控件2"
+            , "select_name": "tesx8_8", "type": "text", "name": "控件2"
             , "align": "left","placeholder":"这是placeholder"
             , "validate": { "require": false }
         }
         ,{
             "id": "tesx9"
-            , "select_name": "FunAreaText2", "type": "button", "name": "控件2"
+            , "select_name": "tesx9_9", "type": "button", "name": "控件2"
             , "align": "left","value":"测试"
             , "validate": { "require": false }
         }
