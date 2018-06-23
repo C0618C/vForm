@@ -63,7 +63,7 @@
         this.Create = _v_widget_Create;
         this.GetOption = _v_widget_GetOption;
         this.Check = _v_widget_Check;
-        
+
         //需要重载的API
         this.Refresh = _v_widget_Refresh;           //用于将值同步到控件上
         this._createDomObj = null;      //创建实际的控件
@@ -75,8 +75,8 @@
 
     //Bootstrap 形式
     function _v_widget_Init_bs(vform) {
-        var vs = vform?vform.GetOption():{};
-        var a = 12 / (vs.column||1);
+        var vs = vform ? vform.GetOption() : {};
+        var a = 12 / (vs.column || 1);
         if (!vs.fieldset) vs.fieldset = [];
         var lw = vs.fieldset[0] || 2;
         var ow = vs.fieldset[1] || 10;
@@ -85,7 +85,7 @@
             a *= this.curSetting.colspan;
             lw /= this.curSetting.colspan;
             ow = 12 - lw;
-        }else{
+        } else {
             this.curSetting.colspan = 1;
         }
 
@@ -114,6 +114,12 @@
         } else {
             obj = document.createElement("span");
         }
+        if(this.ctrlObj){
+            var wg = this;
+            VForm.on(this.ctrlObj, "change", function () {
+                wg.SetData({ text: obj.value, value: obj.value }, false);
+            });
+        }
         if (obj) {
             obj.id = MakeAnId(8) + "_" + s.id;
             this.ctrlId = obj.id;
@@ -136,7 +142,7 @@
     }
 
     function _v_widget_GetData() {
-        if(this.data.text === this.data.value) return this.data.value;
+        if (this.data.text === this.data.value) return this.data.value;
         return this.data;
     }
     function _v_widget_GetText() {
@@ -179,15 +185,17 @@
         } else {
             //document.getElementById(this.ctrlId).innerText = this.GetText();
         }
+
+        this.Check();
     }
 
-    //校验各个控件
-    function _v_widget_Check(){
-        if(VForm.Validate){
-            for(var x in this.curSetting.validate){
+    //校验控件的所有规则
+    function _v_widget_Check() {
+        if (VForm.Validate) {
+            for (var x in this.curSetting.validate) {
                 var options = this.curSetting.validate[x];
-                var rsl = VForm.Validate[x]?VForm.Validate[x](this,options):true;
-                if(rsl!==true) return {name:this.curSetting.name,errinfo:rsl};
+                var rsl = VForm.Validate[x] ? VForm.Validate[x](this, options) : true;
+                if (rsl !== true) return { name: this.curSetting.name, errinfo: rsl };
             }
         }
         return true;
@@ -201,25 +209,21 @@
         //重载子类方法
         this._createDomObj = function () {
             var obj = document.createElement("input");
-            try{
+            try {
                 obj.type = setting.type;
-            }catch(e){
-                obj.type ="text";
-                console.log("浏览器不支持类型："+setting.type+"，已使用text替代。");
+            } catch (e) {
+                obj.type = "text";
+                console.log("浏览器不支持类型：" + setting.type + "，已使用text替代。");
             }
 
             if (setting.placeholder) obj.setAttribute("placeholder", setting.placeholder);
-            if (setting.type !== "button") obj.className = "form_control vform_widget_text"
-            var wg = this;
-            obj.addEventListener("change", function () {
-                wg.SetData({ text: obj.value, value: obj.value }, false);
-            });
+            if (setting.type !== "button") obj.className = "form_control vform_widget_text";
             return obj;
         }
 
         super_SetValue = this.SetValue;
-        this.SetValue = function(value){
-            super_SetValue.call(this,value,false);
+        this.SetValue = function (value) {
+            super_SetValue.call(this, value, false);
             this.SetText(value);
         }
 
@@ -233,20 +237,16 @@
         //重载子类方法
         this._createDomObj = function () {
             var obj = document.createElement("textarea");
-            obj.className = "form_control vform_widget_textarea"
-            var wg = this;
-            // obj.addEventListener("change", function () {
-            //     wg.SetData({ text: obj.value, value: obj.value }, false);
-            // });
+            obj.className = "form_control vform_widget_textarea";
             return obj;
         }
 
         super_SetValue = this.SetValue;
-        this.SetValue = function(value){
-            super_SetValue.call(this,value,false);
+        this.SetValue = function (value) {
+            super_SetValue.call(this, value, false);
             this.SetText(value);
         }
-        
+
         this.Create();
         return this;
     });
@@ -254,11 +254,12 @@
         //继承父类
         vfWidget.call(this, setting, vform);
         var s = setting;
+        var n = s.select_name || MakeAnId(10);
+        this.idxhash = {};
 
         //根据options里的选项，进行初始化
         this._CreateByOptions = function () {
             var ss = this.curSetting;
-            var n = s.select_name || MakeAnId(10);
             if (!ss.options || ss.options.length == 0) return;
 
             for (var i = 0; i < ss.options.length; i++) {
@@ -271,7 +272,8 @@
                 o.name = n;
                 o.value = ss.options[i].value;
                 o.id = id;
-                o.className = "form_check_input"
+                o.className = "form_check_input";
+                this.idxhash[o.value]=o;
 
                 var l = document.createElement("label");
                 l.innerText = ss.options[i].text;
@@ -299,6 +301,17 @@
         }
 
         this.Create();
+        
+        this.SetData = function(d){
+            if(!Array.isArray(d)) d=[].push(d);
+
+            for(var i = 0;i<d.length;i++){
+                var v = d[i]
+                if(typeof(d[i])==="object") v = v.value;
+                
+                this.idxhash[v].setAttribute("checked","checked");
+            }
+        }
         return this;
     });
     VFWidgetFactory.AddWidget("table", function (setting, vform) {

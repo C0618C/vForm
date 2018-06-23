@@ -16,6 +16,8 @@
             }
             ,lang:"zh-CN"
         };
+
+        this.widgetsHash = {};
         this.widgets = [];
         this.dom = null;
 
@@ -32,7 +34,9 @@
         this.SetData = _vfAPISetData;
         /* 设置语言 */
         this.SetLanguage = _vfAPISetLanguage;
-        /*  */
+
+        /* 获取具体插件 */
+        this.get = _vfAPIGet;
         /*  */
         /*  */
 
@@ -99,10 +103,10 @@
             this.baseSetting = config;
             this.SetOption(config);
 
-            var s = this.curSetting;
             for (var i = 0; i < config.widgets.length; i++) {
                 var widget = VFWidgetFactory.GetWidget(config.widgets[i], this);
                 this.widgets.push(widget);
+                this.widgetsHash[config.widgets[i].id] = widget;
             }
 
             if (this.widgets.length === 1 && config.widgets[0].type === "table") {
@@ -111,7 +115,8 @@
                 document.body.appendChild(this.dom);
                 return;
             }
-
+            
+            var s = this.curSetting;
             this.dom = document.createElement("table");
             this.dom.setAttribute("border", 1);
             for (var cl = 0; cl < s.column * 2; cl++) {
@@ -193,8 +198,11 @@
         return d;
     }
     //设置表单数据
-    var _vfAPISetData = function () {
-
+    var _vfAPISetData = function (data,sname) {
+        sname = sname||"id";
+        for(var d in data){
+            
+        }
     };
     //检查表单数据有效性
     //返回：true / [{name,errinfo},...]
@@ -210,6 +218,24 @@
 
         return result.length === 0 ? true : result;
     }
+
+    /* 根据id获取元素 */
+    var _vfAPIGet = function(id){
+        return this.widgetsHash[id];
+    }
+
+
+
+    /* 事件绑定工具 */
+    Object.getPrototypeOf(VForm).on = function(obj,action,fn){
+        if(obj && obj.addEventListener){
+            obj.addEventListener(action,fn);
+        }else if(obj && obj.attachEvent){
+            obj.attachEvent("on"+action,fn.bind(obj));
+        }
+    }
+
+
 
     global.VForm = VForm;
     return VForm;
