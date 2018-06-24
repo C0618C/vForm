@@ -212,6 +212,7 @@
         for (var w = 0; w < this.widgets.length; w++) {
             var r = this.widgets[w].Check();
             if (r !== true) {
+                r.form = this.curSetting.title;
                 result.push(r);
             }
         }

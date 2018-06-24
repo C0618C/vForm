@@ -1,7 +1,7 @@
 {
     "column":3
     ,"fieldset":[4,8]
-    ,"title":"XX工作事物申请"
+    ,"title":"XX工作事物申请","id":"test"
     ,"widgets":[
         {
             "id": "test2"
@@ -32,7 +32,7 @@
             "id": "tesx1"
             , "select_name": "FunAreaText2", "type": "search", "name": "搜索"
             , "align": "left"
-            , "validate": { "require": false }
+            , "validate": { "require": true }
         }
         ,{
             "id": "test2"

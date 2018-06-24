@@ -6,7 +6,7 @@
 
         return this;
     }
-    var _vfwm_AddWidget = function (type, setting) {
+    var _vfwm_AddWidget = function (type, setting_fn) {
         var types = type.split(",");
         for (var i = 0; i < types.length; i++) {
             (function (i) {
@@ -14,7 +14,7 @@
                     console.warn("注册Widget出错，已存在的Widget定义：" + types[i]);
                     return false;
                 }
-                widget[types[i]] = setting;
+                widget[types[i]] = setting_fn;
             })(i);
         }
     }
@@ -49,11 +49,15 @@
         this.curSetting = setting;              //当前设置、实际设置、最新设置
         this.ctrlId = null;                     //控件的ID
         this.ctrlObj = null; //可以用于聚焦的控件
+        this.requireObj = null;                 //用于显示必填的提示
+        this.hiteObj = null;                      //用于提示错误的元素
+
 
         //一般不需要重载的API
         this.GetData = _v_widget_GetData;
         this.GetText = _v_widget_GetText;
         this.GetValue = _v_widget_GetValue;
+        // this.InitData = _v_widget_InitData;                     //初始化控件的值，不触发校验
         this.SetData = _v_widget_SetData;
         this.SetText = _v_widget_SetText;
         this.SetValue = _v_widget_SetValue;
@@ -73,7 +77,6 @@
         return this;
     }
 
-    //Bootstrap 形式
     function _v_widget_Init_bs(vform) {
         var vs = vform ? vform.GetOption() : {};
         var a = 12 / (vs.column || 1);
@@ -96,9 +99,17 @@
         } else {
             this.cell = document.createElement("div");
             this.label = document.createElement("label");
+            var lbtext = document.createElement("span");
+            this.requireObj = document.createElement("span");
             this.label.className = "col_form_label col_xs_2  col_sm_" + lw;
+            this.requireObj.className = "text-danger";            //必填的样式
             this.cell.className = "vform_cell col_xs_10 col_sm_" + ow;
-            this.label.innerText = this.curSetting.name;
+            lbtext.innerText = this.curSetting.name;
+
+            if (this.curSetting.validate && this.curSetting.validate.require) this.requireObj.innerText = "*";
+
+            this.label.appendChild(this.requireObj);
+            this.label.appendChild(lbtext);
             this.dom.appendChild(this.label);
             this.dom.appendChild(this.cell);
         }
@@ -114,7 +125,7 @@
         } else {
             obj = document.createElement("span");
         }
-        if(this.ctrlObj){
+        if (this.ctrlObj) {
             var wg = this;
             VForm.on(this.ctrlObj, "change", function () {
                 wg.SetData({ text: obj.value, value: obj.value }, false);
@@ -155,9 +166,8 @@
         return JSON.stringify(this.data.value);
     }
     function _v_widget_SetData(data, isRefresh) {
-        this.data.text = data.text;
-        this.data.value = data.value;
-        if (isRefresh !== false) this.Refresh("data");
+        this.SetText(data.text);
+        this.SetValue(data.value);
     }
     function _v_widget_SetText(text, isRefresh) {
         this.data.text = text;
@@ -165,6 +175,7 @@
     }
     function _v_widget_SetValue(value, isRefresh) {
         this.data.value = value;
+        this.Check();
         if (isRefresh !== false) this.Refresh("value");
     }
     function _v_widget_IsCtrl() {
@@ -179,14 +190,17 @@
         return this.curSetting;
     }
 
-    function _v_widget_Refresh() {
-        if (this.IsCtrl()) {
-            this.ctrlObj.value = this.GetValue();
+    function _v_widget_Refresh(type) {
+        if (this.IsCtrl() && this.ctrlObj) {
+            switch (type) {
+                case "value":
+                    this.ctrlObj.value = this.GetValue();
+                    break;
+            }
         } else {
+            //TODO:只读状态下的值设置
             //document.getElementById(this.ctrlId).innerText = this.GetText();
         }
-
-        this.Check();
     }
 
     //校验控件的所有规则
@@ -202,15 +216,17 @@
     }
 
     //定义控件    
-    VFWidgetFactory.AddWidget("text,number,password,button,email,search,address", function (setting, vform) {
+    VFWidgetFactory.AddWidget("text,number,password,button,email,search,address,textarea", function (setting, vform) {
         //继承父类
         vfWidget.call(this, setting, vform);
 
         //重载子类方法
         this._createDomObj = function () {
-            var obj = document.createElement("input");
+            var t = setting.type;
+            var obj = document.createElement(t === "textarea" ? t : "input");
+
             try {
-                obj.type = setting.type;
+                obj.setAttribute("type", t);
             } catch (e) {
                 obj.type = "text";
                 console.log("浏览器不支持类型：" + setting.type + "，已使用text替代。");
@@ -218,38 +234,21 @@
 
             if (setting.placeholder) obj.setAttribute("placeholder", setting.placeholder);
             if (setting.type !== "button") obj.className = "form_control vform_widget_text";
+
             return obj;
         }
 
         super_SetValue = this.SetValue;
         this.SetValue = function (value) {
-            super_SetValue.call(this, value, false);
             this.SetText(value);
+            super_SetValue.call(this, value, false);
         }
 
         this.Create();
+        this.Refresh("value");
         return this;
     });
-    VFWidgetFactory.AddWidget("textarea", function (setting, vform) {
-        //继承父类
-        vfWidget.call(this, setting, vform);
 
-        //重载子类方法
-        this._createDomObj = function () {
-            var obj = document.createElement("textarea");
-            obj.className = "form_control vform_widget_textarea";
-            return obj;
-        }
-
-        super_SetValue = this.SetValue;
-        this.SetValue = function (value) {
-            super_SetValue.call(this, value, false);
-            this.SetText(value);
-        }
-
-        this.Create();
-        return this;
-    });
     VFWidgetFactory.AddWidget("checkbox,radio", function (setting, vform) {
         //继承父类
         vfWidget.call(this, setting, vform);
@@ -271,9 +270,22 @@
                 o.type = s.type;
                 o.name = n;
                 o.value = ss.options[i].value;
+                o.setAttribute("data-text", ss.options[i].text);
                 o.id = id;
                 o.className = "form_check_input";
-                this.idxhash[o.value]=o;
+                this.idxhash[o.value] = o;
+
+                var wg = this;
+                VForm.on(o, "change", function () {
+                    var r = [];
+                    for (var val in wg.idxhash) {
+                        var ob = wg.idxhash[val];
+                        if (ob.checked)
+                            r.push({ text: ob.getAttribute("data-text"), value: ob.value });
+                    }
+                    if(s.type==="radio") r=r[0];
+                    wg.SetData(r, false);
+                });
 
                 var l = document.createElement("label");
                 l.innerText = ss.options[i].text;
@@ -296,24 +308,59 @@
             return null;
         }
 
+        //TODO: 完成checkbox和radio的数据源加载
         this._LoadFromOptions = function () {
             console.warn("需要加载数据源");
         }
 
         this.Create();
-        
-        this.SetData = function(d){
-            if(!Array.isArray(d)) d=[].push(d);
 
-            for(var i = 0;i<d.length;i++){
-                var v = d[i]
-                if(typeof(d[i])==="object") v = v.value;
-                
-                this.idxhash[v].setAttribute("checked","checked");
+        var super_SetData = this.SetData;
+        this.SetData = function (d, isRefresh) {
+            if (d.text !== undefined && d.value !== undefined) super_SetData.bind(this)(d, isRefresh);
+            else if(Array.isArray(d)){
+                var txt=[];
+                var val=[];
+                for(var x in d){
+                    txt.push(d[x].text);
+                    val.push(d[x].value)
+                }
+                super_SetData.bind(this)({text:txt,value:val},isRefresh);
             }
         }
+
+        //TODO: 重写 Refresh 函数
+        // this.SetData = function(d,isRefresh){
+        //     if (!Array.isArray(d)) d = [].push(d);
+        //     var r = [];
+        //     for (var i = 0; i < d.length; i++) {
+        //         var v = d[i]
+        //         if (typeof (d[i]) === "object") v = v.value;
+        //         r.push(v);
+        //     }
+        //     this.SetValue(r,isRefresh);
+        // }
+        // this.SetValue = function (d, isRefresh) {
+        //     if (!Array.isArray(d)) d = [].push(d);
+        //     for (var o in this.idxhash) {
+        //         this.idxhash[o].removeAttribute("checked");
+        //     }
+        //     for (var i = 0; i < d.length; i++) {
+        //         var v = d[i]
+        //         if (typeof (d[i]) === "object") v = v.value;
+
+        //         this.idxhash[v].setAttribute("checked", "checked");
+        //     }
+
+        //     if (isRefresh !== false) this.Refresh("value");
+        //     this.Check();
+        // }
+        // this.SetText = function(){}
         return this;
     });
+
+
+    //TODO: Table控件
     VFWidgetFactory.AddWidget("table", function (setting, vform) {
         //继承父类
         vfWidget.call(this, setting, vform);
