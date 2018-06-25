@@ -54,15 +54,28 @@
     //所有实例化成功的静态对象列表 在Init方法里注册
     Object.getPrototypeOf(VForm).vFormObject = [];
 
-    //根据传入参数（id/name），找出需要获取的vForm对象
+    //根据传入参数（#id #widget-id），找出需要获取的vForm对象或对应控件
     Object.getPrototypeOf(VForm).$ = function (param) {
-        var param = param.replace(/^[#\s]+|\s+$/, "");
-        for (var x in VForm.vFormObject) {
-            if (VForm.vFormObject[x].curSetting.id === param) {
-                return VForm.vFormObject[x];
+        var paths = param.split("#");
+        var vform = null;
+        if(paths[0]==="")paths.shift();
+        var p = paths[0];
+        if (p) {
+            p = p.replace(/^[\s]+|\s+$/, "");
+            for (var x in VForm.vFormObject) {
+                if (VForm.vFormObject[x].curSetting.id === p) {
+                    vform = VForm.vFormObject[x];
+                    break;
+                }
             }
         }
-        return null;
+        if(vform && paths.length == 1) return vform;
+        var w = {};
+        for (var s = 1; s < paths.length && w; s++) {
+            var r = paths[s].replace(/^[\s]+|\s+$/, "");
+            w = vform.get(r);
+        }
+        return w;
     };
 
 
