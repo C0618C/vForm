@@ -338,19 +338,27 @@
                     }
                 }
                 super_SetData.bind(this)({ text: txt, value: val }, isRefresh);
+            }else if(typeof(d)==="string"){
+                super_SetData.bind(this)({ text: d, value: d }, isRefresh);
             }
         }
+
 
         this.Refresh = function(type){
             if (this.IsCtrl()) {
                 switch (type) {
+                    case "text":
+                        if(this.data.text.length>0){
+                            //TODO:根据text标签设置checkbox内容
+                        }
+                        break;
                     case "value":
                         for (var o in this.idxhash) {
                             this.idxhash[o].removeAttribute("checked");
                         }
                         for (var i = 0; i < this.data.value.length; i++) {
-                            var v = this.data.value[i]
-                            this.idxhash[v].setAttribute("checked", "checked");
+                            var v = this.data.value[i];
+                            if(this.idxhash[v])this.idxhash[v].setAttribute("checked", "checked");
                         }
                         break;
                 }

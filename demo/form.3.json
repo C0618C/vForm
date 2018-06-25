@@ -4,7 +4,7 @@
     ,"title":"XX工作事物申请","id":"test"
     ,"widgets":[
         {
-            "id": "test2"
+            "id": "rd"
             , "select_name": "ss1123", "type": "radio", "name": "单选"
             , "align": "left","options":[{"value":1,"text":"是"},{"value":0,"text":"否"}]
             , "validate": { "require": false }
