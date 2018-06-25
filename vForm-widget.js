@@ -50,7 +50,7 @@
         this.ctrlId = null;                     //控件的ID
         this.ctrlObj = null; //可以用于聚焦的控件
         this.requireObj = null;                 //用于显示必填的提示
-        this.hiteObj = null;                      //用于提示错误的元素
+        this.hintObj = null;                      //用于提示错误的元素
 
 
         //一般不需要重载的API
@@ -67,6 +67,7 @@
         this.Create = _v_widget_Create;
         this.GetOption = _v_widget_GetOption;
         this.Check = _v_widget_Check;
+        this.SetHint = _v_widget_SetHint;
 
         //需要重载的API
         this.Refresh = _v_widget_Refresh;           //用于将值同步到控件上
@@ -149,6 +150,9 @@
 
             this.cell.appendChild(obj);
         }
+        this.hintObj = document.createElement("span");
+        this.hintObj.className = "text-danger";            //错误语的样式
+        this.cell.appendChild(this.hintObj);
         if (s.value !== undefined) this.SetValue(s.value, true);
     }
 
@@ -167,14 +171,14 @@
     }
     function _v_widget_SetData(data, isRefresh) {
         var t, v;
-        if (typeof (data) === "string" || typeof(data)==="number") {
+        if (typeof (data) === "string" || typeof (data) === "number") {
             t = v = data;
         } else {
             t = data.text;
             v = data.value;
         }
-        this.SetText(t,isRefresh);
-        this.SetValue(v,isRefresh);
+        this.SetText(t, isRefresh);
+        this.SetValue(v, isRefresh);
     }
     function _v_widget_SetText(text, isRefresh) {
         this.data.text = text;
@@ -216,10 +220,14 @@
             for (var x in this.curSetting.validate) {
                 var options = this.curSetting.validate[x];
                 var rsl = VForm.Validate[x] ? VForm.Validate[x](this, options) : true;
-                if (rsl !== true) return { name: this.curSetting.name, errinfo: rsl };
+                if (rsl !== true) return { name: this.curSetting.name, errinfo: rsl, id: this.curSetting.id, options: options };
             }
         }
         return true;
+    }
+
+    function _v_widget_SetHint(str) {
+        this.hintObj.innerHTML = str;
     }
 
     //定义控件    
@@ -236,6 +244,12 @@
                 obj.setAttribute("type", t);
             } catch (e) {
                 obj.type = "text";
+                var ck = [];
+                ck["number"] = "isnum";
+
+                if (!this.curSetting.validate) this.curSetting.validate = {};
+                this.curSetting.validate[ck[t]] = true;
+
                 console.log("浏览器不支持类型：" + setting.type + "，已使用text替代。");
             }
 
@@ -249,7 +263,7 @@
         this.SetValue = function (value, isRefresh) {
             this.SetText(value);
             super_SetValue.call(this, value, false);
-            if (isRefresh!==false) this.Refresh("value");
+            if (isRefresh !== false) this.Refresh("value");
         }
 
         this.Create();
@@ -330,25 +344,25 @@
                 var txt = [];
                 var val = [];
                 for (var x in d) {
-                    if(typeof(d[x])==="object"){
+                    if (typeof (d[x]) === "object") {
                         txt.push(d[x].text);
                         val.push(d[x].value);
-                    }else{
+                    } else {
                         val.push(d[x]);
                     }
                 }
                 super_SetData.bind(this)({ text: txt, value: val }, isRefresh);
-            }else if(typeof(d)==="string"){
+            } else if (typeof (d) === "string") {
                 super_SetData.bind(this)({ text: d, value: d }, isRefresh);
             }
         }
 
 
-        this.Refresh = function(type){
+        this.Refresh = function (type) {
             if (this.IsCtrl()) {
                 switch (type) {
                     case "text":
-                        if(this.data.text.length>0){
+                        if (this.data.text.length > 0) {
                             //TODO:根据text标签设置checkbox内容
                         }
                         break;
@@ -358,7 +372,7 @@
                         }
                         for (var i = 0; i < this.data.value.length; i++) {
                             var v = this.data.value[i];
-                            if(this.idxhash[v])this.idxhash[v].setAttribute("checked", "checked");
+                            if (this.idxhash[v]) this.idxhash[v].setAttribute("checked", "checked");
                         }
                         break;
                 }

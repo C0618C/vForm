@@ -224,6 +224,18 @@
             }
         }
     };
+
+    //更新错误状态，正确处理错误提示
+    function _vf_ResetErr(result){
+        for(var id in this.widgetsHash){
+            var rsl = "";
+            for(var i = 0;i<result.length;i++){
+                if(result[i].id===id) rsl = VForm.Format(result[i]);
+            }
+            this.widgetsHash[id].SetHint(rsl);
+        }
+    }
+
     //检查表单数据有效性
     //返回：true / [{name,errinfo},...]
     var _vfAPICheck = function () {
@@ -237,6 +249,7 @@
             }
         }
 
+        _vf_ResetErr.bind(this)(result);
         return result.length === 0 ? true : result;
     }
 

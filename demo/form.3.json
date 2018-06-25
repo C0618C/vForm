@@ -20,7 +20,7 @@
             "id": "add"
             , "select_name": "FunAreaText2", "type": "address", "name": "地址"
             , "align": "left","colspan":2
-            , "validate": { "require": false }
+            , "validate": { "require": false,"rang":[3,8] }
         }
         ,{
             "id": "tesx1"
