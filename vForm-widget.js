@@ -330,40 +330,36 @@
                 var txt = [];
                 var val = [];
                 for (var x in d) {
-                    txt.push(d[x].text);
-                    val.push(d[x].value)
+                    if(typeof(d[x])==="object"){
+                        txt.push(d[x].text);
+                        val.push(d[x].value);
+                    }else{
+                        val.push(d[x]);
+                    }
                 }
                 super_SetData.bind(this)({ text: txt, value: val }, isRefresh);
             }
         }
 
-        //TODO: 重写 Refresh 函数
-        // this.SetData = function(d,isRefresh){
-        //     if (!Array.isArray(d)) d = [].push(d);
-        //     var r = [];
-        //     for (var i = 0; i < d.length; i++) {
-        //         var v = d[i]
-        //         if (typeof (d[i]) === "object") v = v.value;
-        //         r.push(v);
-        //     }
-        //     this.SetValue(r,isRefresh);
-        // }
-        // this.SetValue = function (d, isRefresh) {
-        //     if (!Array.isArray(d)) d = [].push(d);
-        //     for (var o in this.idxhash) {
-        //         this.idxhash[o].removeAttribute("checked");
-        //     }
-        //     for (var i = 0; i < d.length; i++) {
-        //         var v = d[i]
-        //         if (typeof (d[i]) === "object") v = v.value;
+        this.Refresh = function(type){
+            if (this.IsCtrl()) {
+                switch (type) {
+                    case "value":
+                        for (var o in this.idxhash) {
+                            this.idxhash[o].removeAttribute("checked");
+                        }
+                        for (var i = 0; i < this.data.value.length; i++) {
+                            var v = this.data.value[i]
+                            this.idxhash[v].setAttribute("checked", "checked");
+                        }
+                        break;
+                }
+            } else {
+                //TODO:只读状态下的值设置
+                //document.getElementById(this.ctrlId).innerText = this.GetText();
+            }
+        }
 
-        //         this.idxhash[v].setAttribute("checked", "checked");
-        //     }
-
-        //     if (isRefresh !== false) this.Refresh("value");
-        //     this.Check();
-        // }
-        // this.SetText = function(){}
         return this;
     });
 
