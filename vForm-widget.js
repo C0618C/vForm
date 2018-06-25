@@ -166,8 +166,15 @@
         return JSON.stringify(this.data.value);
     }
     function _v_widget_SetData(data, isRefresh) {
-        this.SetText(data.text);
-        this.SetValue(data.value);
+        var t, v;
+        if (typeof (data) === "string" || typeof(data)==="number") {
+            t = v = data;
+        } else {
+            t = data.text;
+            v = data.value;
+        }
+        this.SetText(t,isRefresh);
+        this.SetValue(v,isRefresh);
     }
     function _v_widget_SetText(text, isRefresh) {
         this.data.text = text;
@@ -239,9 +246,10 @@
         }
 
         super_SetValue = this.SetValue;
-        this.SetValue = function (value) {
+        this.SetValue = function (value, isRefresh) {
             this.SetText(value);
             super_SetValue.call(this, value, false);
+            if (isRefresh!==false) this.Refresh("value");
         }
 
         this.Create();
@@ -283,7 +291,7 @@
                         if (ob.checked)
                             r.push({ text: ob.getAttribute("data-text"), value: ob.value });
                     }
-                    if(s.type==="radio") r=r[0];
+                    if (s.type === "radio") r = r[0];
                     wg.SetData(r, false);
                 });
 
@@ -318,14 +326,14 @@
         var super_SetData = this.SetData;
         this.SetData = function (d, isRefresh) {
             if (d.text !== undefined && d.value !== undefined) super_SetData.bind(this)(d, isRefresh);
-            else if(Array.isArray(d)){
-                var txt=[];
-                var val=[];
-                for(var x in d){
+            else if (Array.isArray(d)) {
+                var txt = [];
+                var val = [];
+                for (var x in d) {
                     txt.push(d[x].text);
                     val.push(d[x].value)
                 }
-                super_SetData.bind(this)({text:txt,value:val},isRefresh);
+                super_SetData.bind(this)({ text: txt, value: val }, isRefresh);
             }
         }
 

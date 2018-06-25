@@ -14,10 +14,10 @@
             , debug: {
                 isdebug: true                //是否调试模式
             }
-            ,lang:"zh-CN"
+            , lang: "zh-CN"
         };
 
-        this.widgetsHash = {};
+        this.widgetsHash = {};                  //通过ID索引的控件对象
         this.widgets = [];
         this.dom = null;
 
@@ -115,7 +115,7 @@
                 document.body.appendChild(this.dom);
                 return;
             }
-            
+
             var s = this.curSetting;
             this.dom = document.createElement("table");
             this.dom.setAttribute("border", 1);
@@ -182,7 +182,7 @@
     }
 
     //设置语言
-    var _vfAPISetLanguage = function(language){
+    var _vfAPISetLanguage = function (language) {
         this.status.lang = language;
     }
 
@@ -190,18 +190,25 @@
     var _vfAPIGetData = function (idx) {
         idx = idx || "id";
         var d = {};
-        for (var i = 0; i < this.widgets.length; i++){
+        for (var i = 0; i < this.widgets.length; i++) {
             var sname = this.widgets[i].GetOption()[idx];
-            if(!sname) continue;
+            if (!sname) continue;
             d[sname] = this.widgets[i].GetData();
-        } 
+        }
         return d;
     }
     //设置表单数据
-    var _vfAPISetData = function (data,sname) {
-        sname = sname||"id";
-        for(var d in data){
-            
+    //data格式 ：{id:{text:"",value:""}|[,id:""][,...]}
+    var _vfAPISetData = function (data, sname) {
+        sname = sname || "id";
+        for (var d in data) {
+            if (sname === "id") this.widgetsHash[d].SetData(data[d]);
+            else {
+                for (var w = 0; w < this.widgets.length; w++) {
+                    var o = this.widgets[w].GetOption();
+                    if (o[sname] === d) this.widgets[w].SetData(data[d]);
+                }
+            }
         }
     };
     //检查表单数据有效性
@@ -221,18 +228,18 @@
     }
 
     /* 根据id获取元素 */
-    var _vfAPIGet = function(id){
+    var _vfAPIGet = function (id) {
         return this.widgetsHash[id];
     }
 
 
 
     /* 事件绑定工具 */
-    Object.getPrototypeOf(VForm).on = function(obj,action,fn){
-        if(obj && obj.addEventListener){
-            obj.addEventListener(action,fn);
-        }else if(obj && obj.attachEvent){
-            obj.attachEvent("on"+action,fn.bind(obj));
+    Object.getPrototypeOf(VForm).on = function (obj, action, fn) {
+        if (obj && obj.addEventListener) {
+            obj.addEventListener(action, fn);
+        } else if (obj && obj.attachEvent) {
+            obj.attachEvent("on" + action, fn.bind(obj));
         }
     }
 

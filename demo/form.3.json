@@ -11,13 +11,13 @@
         }
 
         ,{
-            "id": "tesx1"
+            "id": "psw"
             , "select_name": "FunAreaText2", "type": "password", "name": "控件2"
             , "align": "left","placeholder":"这是密码"
             , "validate": { "require": false }
         }
         ,{
-            "id": "tesx1"
+            "id": "add"
             , "select_name": "FunAreaText2", "type": "address", "name": "地址"
             , "align": "left","colspan":2
             , "validate": { "require": false }
