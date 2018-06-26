@@ -1,6 +1,6 @@
 (function () {
     if (!VForm) {
-        console.warn("vForm 尚未定义");
+        console.warn("【表单验证模块】：vForm 尚未定义");
         return;
     }
 
@@ -13,7 +13,6 @@
         return msg.replace(/\$\{([^{}]*?)\}/g, function (match, key) { return errInfo[key] });
     }
 
-    //TODO: 自动根据widget类型，加入基础校验
 
     //必填·通用
     Object.getPrototypeOf(VForm.Validate).require = function (widget, options) {
@@ -40,7 +39,7 @@
         if(IsNum(d)){
             d*=1;
             options*=1;
-            return Math.min(d,options) === options?true:"【${name}】不能小于：${options}。";//FIXME:返回结果应当有options项用于生产错误提示
+            return Math.min(d,options) === options?true:"【${name}】不能小于：${options}。";
         }
 
         return "【${name}】要求填写数字。";
@@ -53,7 +52,7 @@
         if(IsNum(d)){
             d*=1;
             options*=1;
-            return Math.max(d,options) === options?true:"【${name}】不能大于：${options}。";//FIXME:返回结果应当有options项用于生产错误提示
+            return Math.max(d,options) === options?true:"【${name}】不能大于：${options}。";
         }
 
         return "【${name}】要求填写数字。";

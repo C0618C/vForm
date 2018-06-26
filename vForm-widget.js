@@ -68,6 +68,7 @@
         this.GetOption = _v_widget_GetOption;
         this.Check = _v_widget_Check;
         this.SetHint = _v_widget_SetHint;
+        this.I18N = vform.I18N.bind(vform);         //多语种翻译工具
 
         //需要重载的API
         this.Refresh = _v_widget_Refresh;           //用于将值同步到控件上
@@ -93,7 +94,7 @@
             this.label.className = "col_form_label";// col_xs_2  col_sm_" + lw;
             this.requireObj.className = "text-danger";            //必填的样式
             this.cell.className = "vform_cell";// col_xs_10 col_sm_" + ow;
-            lbtext.innerText = this.curSetting.name;
+            lbtext.innerText = this.I18N(this.curSetting.name);
 
             if (this.curSetting.validate && this.curSetting.validate.require) this.requireObj.innerText = "*";
 
@@ -197,7 +198,7 @@
                     break;
             }
         } else {
-            //TODO:只读状态下的值设置
+            //TODO: 『通用控件』【只读】状态下的值设置
             //document.getElementById(this.ctrlId).innerText = this.GetText();
         }
     }
@@ -214,8 +215,15 @@
         return true;
     }
 
-    function _v_widget_SetHint(str) {
+    function _v_widget_SetHint(str, isErr) {
         this.hintObj.innerHTML = str;
+        if (isErr === undefined) isErr = str !== "";
+
+        if (isErr) {
+            this.cell.className = this.cell.className + " vform_widget_error";
+        } else {
+            this.cell.className = this.cell.className.replace("vform_widget_error", "");
+        }
     }
 
     //定义控件    
@@ -318,7 +326,7 @@
             return null;
         }
 
-        //TODO: 完成checkbox和radio的数据源加载
+        //TODO: 完成checkbox和radio的【数据源】加载
         this._LoadFromOptions = function () {
             console.warn("需要加载数据源");
         }
@@ -351,7 +359,7 @@
                 switch (type) {
                     case "text":
                         if (this.data.text.length > 0) {
-                            //TODO:根据text标签设置checkbox内容
+                            //TODO:根据text标签设置checkbox内容 【Refresh-text】
                         }
                         break;
                     case "value":
@@ -365,7 +373,7 @@
                         break;
                 }
             } else {
-                //TODO:只读状态下的值设置
+                //TODO: 『checkbox|radio』【只读】状态下的值设置
                 //document.getElementById(this.ctrlId).innerText = this.GetText();
             }
         }

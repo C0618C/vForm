@@ -20,7 +20,7 @@
             "id": "tesx3"
             , "select_name": "tesx3_3", "type": "address", "name": "地址"
             , "align": "left"
-            , "validate": { "require": true }
+            , "validate": { "require": true,"min":99 }
         }
         ,{
             "id": "tesx4"

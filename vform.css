@@ -32,3 +32,6 @@
 .vform .headtitle.bg-secondary{
     color:white;
 }
+.vform .vform_widget_error .vform_widget_text{
+    border-color: #dc3545!important;
+}

@@ -1,4 +1,45 @@
 (function (global) {
+    /**
+     * 通过路径获得对应的表单或控件对象
+     * @param {string} param 
+     */
+    var _vfAPI_$_ = function (param) {
+        var paths = param.split("#");
+        var vform = null;
+        if (paths[0] === "") paths.shift();
+        var p = paths[0];
+        if (p) {
+            p = p.replace(/^[\s]+|\s+$/, "");
+            for (var x in VForm.__vFormObject__) {
+                if (VForm.__vFormObject__[x].curSetting.id === p) {
+                    vform = VForm.__vFormObject__[x];
+                    break;
+                }
+            }
+        }
+        if (vform && paths.length == 1) return vform;
+        var w = {};
+        for (var s = 1; s < paths.length && w; s++) {
+            var r = paths[s].replace(/^[\s]+|\s+$/, "");
+            w = vform.get(r);
+        }
+        return w;
+    };
+
+    /**
+     * 事件绑定工具
+     * @param {object} obj 待绑定事件的对象
+     * @param {string} action 绑定动作
+     * @param {function} fn 绑定的事件处理函数
+     */
+    var _vfAPI_on__ = function (obj, action, fn) {
+        if (obj && obj.addEventListener) {
+            obj.addEventListener(action, fn);
+        } else if (obj && obj.attachEvent) {
+            obj.attachEvent("on" + action, fn.bind(obj));
+        }
+    }
+
     function VForm() {
         //--------------------Attributes------------------
         /* 表单当前数据 */
@@ -14,7 +55,8 @@
             , debug: {
                 isdebug: true                //是否调试模式
             }
-            , lang: "zh-CN"
+            , lang: "zh-cn"                     //当前语种
+            , def_lang: "zh-cn"                 //默认语种
         };
 
         this.widgetsHash = {};                  //通过ID索引的控件对象
@@ -45,6 +87,9 @@
          */
         this.Check = _vfAPICheck;
 
+        /* 将默认语言翻译成目标语言 */
+        this.I18N = _vfAPITranslate;
+
         //init
         _constructor(this);
         return this;
@@ -52,37 +97,19 @@
 
     // *********************** 定义vForm的静态对象及静态方法 *****************************
     //所有实例化成功的静态对象列表 在Init方法里注册
-    Object.getPrototypeOf(VForm).vFormObject = [];
+    Object.getPrototypeOf(VForm).__vFormObject__ = [];
 
     //根据传入参数（#id #widget-id），找出需要获取的vForm对象或对应控件
-    Object.getPrototypeOf(VForm).$ = function (param) {
-        var paths = param.split("#");
-        var vform = null;
-        if(paths[0]==="")paths.shift();
-        var p = paths[0];
-        if (p) {
-            p = p.replace(/^[\s]+|\s+$/, "");
-            for (var x in VForm.vFormObject) {
-                if (VForm.vFormObject[x].curSetting.id === p) {
-                    vform = VForm.vFormObject[x];
-                    break;
-                }
-            }
-        }
-        if(vform && paths.length == 1) return vform;
-        var w = {};
-        for (var s = 1; s < paths.length && w; s++) {
-            var r = paths[s].replace(/^[\s]+|\s+$/, "");
-            w = vform.get(r);
-        }
-        return w;
-    };
+    Object.getPrototypeOf(VForm).$ = _vfAPI_$_;
+
+    //事件绑定
+    Object.getPrototypeOf(VForm).on = _vfAPI_on__;
 
 
     //构造函数
     var _constructor = (function () {
         return function (vf) {
-            //debug工具，接管console
+            //DEBUG: debug工具，接管console
             if (console) {
                 if (console.trustees != undefined) return;
                 var _console = console;
@@ -116,6 +143,7 @@
             this.baseSetting = config;
             this.SetOption(config);
 
+            //创建所有控件
             for (var i = 0; i < config.widgets.length; i++) {
                 var widget = VFWidgetFactory.GetWidget(config.widgets[i], this);
                 this.widgets.push(widget);
@@ -125,7 +153,7 @@
             if (this.widgets.length === 1 && config.widgets[0].type === "table") {
                 this.dom = this.widgets[0].cell;
                 this.dom.className = "container vform vfTable";
-                document.body.appendChild(this.dom);
+                document.body.appendChild(this.dom);    //FIXME:vForm创建完后如何加入文档对象
                 return;
             }
 
@@ -138,6 +166,7 @@
                 this.dom.appendChild(c);
             }
 
+            //vF的标题部分
             if (s.theme === undefined) s.theme = "light";
             if (s.title) {
                 var tt = document.createElement("caption");
@@ -145,6 +174,8 @@
                 tt.className = "headtitle" + " bg-" + s.theme;
                 this.dom.appendChild(tt);
             }
+
+            //组装到框架里去
             var r = null;
             var rC = 0;
             var tbd = document.createElement("tbody");
@@ -167,6 +198,7 @@
             }
             this.dom.appendChild(tbd);
 
+            //合并列的计算 控件跨列的处理
             if (this.widgets.length % s.column !== 0) {
                 var c = document.createElement("td");
                 c.setAttribute("colspan", (s.column - this.widgets.length % s.column) * 2);
@@ -174,9 +206,9 @@
             }
 
             this.dom.className = "container vform";
-            document.body.appendChild(this.dom);
+            document.body.appendChild(this.dom);    //FIXME:vForm创建完后如何加入文档对象
 
-            VForm.vFormObject.push(this);
+            VForm.__vFormObject__.push(this);
         }
     })();
     //根据配置初始化
@@ -194,7 +226,10 @@
         return r;
     }
 
-    //设置语言
+    /**
+     * 设置语言
+     * @param {string} language 
+     */
     var _vfAPISetLanguage = function (language) {
         this.status.lang = language;
     }
@@ -226,18 +261,21 @@
     };
 
     //更新错误状态，正确处理错误提示
-    function _vf_ResetErr(result){
-        for(var id in this.widgetsHash){
+    function _vf_ResetErr(result) {
+        for (var id in this.widgetsHash) {
             var rsl = "";
-            for(var i = 0;i<result.length;i++){
-                if(result[i].id===id) rsl = VForm.Format(result[i]);
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].id === id) rsl = VForm.Format(result[i]);
             }
             this.widgetsHash[id].SetHint(rsl);
         }
     }
 
-    //检查表单数据有效性
-    //返回：true / [{name,errinfo},...]
+
+    /**
+     * 检查表单数据有效性
+     * @returns true | [{name,errinfo},...]
+     */
     var _vfAPICheck = function () {
         var result = [];
 
@@ -259,17 +297,20 @@
     }
 
 
+    /**
+     * 翻译工具
+     * @param {string} text 需要翻译的文本
+     * @param {string} lang 需要翻译的语种，默认为空，取status.lang中设置
+     */
+    var _vfAPITranslate = function(text,lang){
+        if(lang === undefined) lang = this.status.lang;
+        if(lang === this.status.def_lang) return text;
 
-    /* 事件绑定工具 */
-    Object.getPrototypeOf(VForm).on = function (obj, action, fn) {
-        if (obj && obj.addEventListener) {
-            obj.addEventListener(action, fn);
-        } else if (obj && obj.attachEvent) {
-            obj.attachEvent("on" + action, fn.bind(obj));
-        }
+        //TODO: 需要完成【翻译】的过程
+
+        console.warn("["+lang+"]需要翻译："+text);
+        return text;
     }
-
-
 
     global.VForm = VForm;
     return VForm;

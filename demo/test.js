@@ -16,6 +16,7 @@
 
     try{
         var vf = new VForm();
+        vf.SetLanguage("en");
         Ajax({ url: "form.1.json" }).then(function (d) {
             vf.Init(d);
         })
