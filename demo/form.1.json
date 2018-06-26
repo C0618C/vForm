@@ -4,56 +4,56 @@
     ,"theme":"light"
     ,"widgets":[
         {
-            "id": "test2"
+            "id": "f1"
             , "select_name": "ss1123", "type": "radio", "name": "单选"
             , "align": "left","options":[{"value":1,"text":"是"},{"value":0,"text":"否"}]
             , "validate": { "require": false }
         }
 
         ,{
-            "id": "tesx1"
+            "id": "f2"
             , "select_name": "FunAreaText2", "type": "password", "name": "控件2"
             , "align": "left","placeholder":"这是密码"
             , "validate": { "require": false }
         }
         ,{
-            "id": "tesx1"
+            "id": "f3"
             , "select_name": "FunAreaText2", "type": "address", "name": "地址"
             , "align": "left"
             , "validate": { "require": false }
         }
         ,{
-            "id": "tesx1"
+            "id": "f4"
             , "select_name": "FunAreaText2", "type": "email", "name": "邮件"
             , "align": "left"
             , "validate": { "require": true }
         }
         ,{
-            "id": "tesx1"
+            "id": "f5"
             , "select_name": "FunAreaText2", "type": "search", "name": "搜索"
             , "align": "left"
             , "validate": { "require": false }
         }
         ,{
-            "id": "test2"
+            "id": "f6"
             , "select_name": "ss112", "type": "checkbox", "name": "多选"
             , "align": "left","options":[{"value":1,"text":"是"},{"value":0,"text":"否"}]
             , "validate": { "require": true }
         }
         ,{
-            "id": "tesx1"
+            "id": "f8"
             , "select_name": "FunAreaText2", "type": "textarea", "name": "这是一个超长的文本标题测试相信实际应用中不会出现这么长的一个标题吧"
             , "align": "left","value":"这是默认值"
             , "validate": { "require": false }
         }
         ,{
-            "id": "tesx1"
+            "id": "f9"
             , "select_name": "FunAreaText2", "type": "number", "name": "数字"
             , "align": "left","placeholder":"这是placeholder"
             , "validate": { "require": true }
         }
         ,{
-            "id": "tesx1"
+            "id": "f10"
             , "select_name": "FunAreaText2", "type": "button", "name": "控件2"
             , "align": "left","value":"测试"
             , "validate": { "require": false }

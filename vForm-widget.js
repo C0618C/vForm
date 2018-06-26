@@ -37,6 +37,7 @@
 
 
 (function () {
+    var parent = null;
     function vfWidget(setting, vform) {
         this.data = {
             value: ""
@@ -75,6 +76,7 @@
         this._createDomObj = null;      //创建实际的控件
         this.SetOption = null;
 
+        parent = vform;
         _v_widget_Init_bs.call(this, vform);
         return this;
     }
@@ -150,7 +152,7 @@
         return this.data;
     }
     function _v_widget_GetText() {
-        return this.data.text;
+        return this.I18N(this.data.text);
     }
     function _v_widget_GetValue(isString) {
         return isString === true ? this.ToString() : this.data.value;
@@ -306,7 +308,7 @@
                 });
 
                 var l = document.createElement("label");
-                l.innerText = ss.options[i].text;
+                l.innerText = this.I18N(ss.options[i].text);
                 l.setAttribute("for", id);
                 l.className = "form_check_input"
 

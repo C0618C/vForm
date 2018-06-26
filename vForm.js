@@ -231,6 +231,8 @@
      * @param {string} language 
      */
     var _vfAPISetLanguage = function (language) {
+        if(VForm.InitLang === undefined) return;//没引入语言模块
+        if(!VForm.InitLang(language)) return;//引用语言包失败
         this.status.lang = language;
     }
 
@@ -306,7 +308,7 @@
         if(lang === undefined) lang = this.status.lang;
         if(lang === this.status.def_lang) return text;
 
-        //TODO: 需要完成【翻译】的过程
+        if(VForm.I18N[lang] && VForm.I18N[lang][text] !== undefined) return VForm.I18N[lang][text];
 
         console.warn("["+lang+"]需要翻译："+text);
         return text;
