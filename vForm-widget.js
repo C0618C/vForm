@@ -80,21 +80,9 @@
 
     function _v_widget_Init_bs(vform) {
         var vs = vform ? vform.GetOption() : {};
-        var a = 12 / (vs.column || 1);
-        if (!vs.fieldset) vs.fieldset = [];
-        var lw = vs.fieldset[0] || 2;
-        var ow = vs.fieldset[1] || 10;
-
-        if (this.curSetting.colspan != 0 && this.curSetting.colspan >= 2 && this.curSetting.colspan <= vs.column) {
-            a *= this.curSetting.colspan;
-            lw /= this.curSetting.colspan;
-            ow = 12 - lw;
-        } else {
-            this.curSetting.colspan = 1;
-        }
 
         this.dom = document.createElement("div");
-        this.dom.className = "form_vf_row box col_xs_12 col_sm_" + a;
+        this.dom.className = "form_vf_row";// box col_xs_12 col_sm_" + a;
         if (this.curSetting.name === undefined) {
             this.cell = this.dom;
         } else {
@@ -102,9 +90,9 @@
             this.label = document.createElement("label");
             var lbtext = document.createElement("span");
             this.requireObj = document.createElement("span");
-            this.label.className = "col_form_label col_xs_2  col_sm_" + lw;
+            this.label.className = "col_form_label";// col_xs_2  col_sm_" + lw;
             this.requireObj.className = "text-danger";            //必填的样式
-            this.cell.className = "vform_cell col_xs_10 col_sm_" + ow;
+            this.cell.className = "vform_cell";// col_xs_10 col_sm_" + ow;
             lbtext.innerText = this.curSetting.name;
 
             if (this.curSetting.validate && this.curSetting.validate.require) this.requireObj.innerText = "*";
@@ -140,20 +128,20 @@
             if (s.select_name) obj.name = s.select_name;
             if (s.value !== undefined) this.SetValue(s.value);
 
-            //DEBUG:
-            {
-                this.dom.setAttribute("role", "dom");
-                this.cell.setAttribute("role", "cell");
-                if (this.label) this.label.setAttribute("role", "label");
-                this.ctrlObj.setAttribute("role", "ctrlObj");
-            }
-
             this.cell.appendChild(obj);
         }
         this.hintObj = document.createElement("span");
         this.hintObj.className = "text-danger";            //错误语的样式
         this.cell.appendChild(this.hintObj);
         if (s.value !== undefined) this.SetValue(s.value, true);
+
+        //DEBUG: 便于测试的特性
+        {
+            this.dom.setAttribute("role", "dom");
+            this.cell.setAttribute("role", "cell");
+            if (this.label) this.label.setAttribute("role", "label");
+            if (this.ctrlObj) this.ctrlObj.setAttribute("role", "ctrlObj");
+        }
     }
 
     function _v_widget_GetData() {

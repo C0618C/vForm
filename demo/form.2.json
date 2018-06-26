@@ -38,7 +38,7 @@
             "id": "checkbox"
             , "select_name": "ss112", "type": "checkbox", "name": "多选"
             , "align": "left","options":[{"value":1,"text":"上午"},{"value":0,"text":"中午"},{"value":2,"text":"下午"},{"value":3,"text":"晚上"},{"value":4,"text":"深夜"},{"value":5,"text":"凌晨"}]
-            , "validate": { "require": false }
+            , "validate": { "require": true }
         }
         ,{
             "id": "tesx7"
