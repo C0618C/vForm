@@ -52,7 +52,7 @@
                 var v = "../demo/form."+this.value+".json";
                 $.get(v, function(data){
                     editor.setValue(data);
-                });
+                },"text");
             })
             $("#run").on("click",function(){
                 var value = editor.getValue();

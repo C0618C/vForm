@@ -80,7 +80,8 @@
         /* 获取具体插件 */
         this.get = _vfAPIGet;
         /*  */
-        /*  */
+        /* 销毁 */
+        this.Destroy = _vfAPIDestroy; 
 
         /* 检查表单数据有效性
         返回：true / [{name,errinfo},...]
@@ -264,16 +265,19 @@
 
     //更新错误状态，正确处理错误提示
     function _vf_ResetErr(result) {
+        var hash ={};
+        for (var i = 0; i < result.length; i++) {
+            result[i].name = this.I18N(result[i].name);
+            result[i].errinfo = this.I18N(result[i].errinfo);
+            hash[result[i].id]=result[i];
+        }
         for (var id in this.widgetsHash) {
+            if(hash[id] === undefined) continue;
             var rsl = "";
-            for (var i = 0; i < result.length; i++) {
-                if (result[i].id === id) rsl = VForm.Format(result[i]);
-            }
+            rsl = VForm.Format(hash[id]);
             this.widgetsHash[id].SetHint(rsl);
         }
     }
-
-
     /**
      * 检查表单数据有效性
      * @returns true | [{name,errinfo},...]
@@ -312,6 +316,14 @@
 
         console.warn("["+lang+"]需要翻译："+text);
         return text;
+    }
+
+    //销毁表格
+    var _vfAPIDestroy = function(){
+        this.dom.remove();
+        this.widgets=[];
+        this.widgetsHash = {};
+        this.dom = null;
     }
 
     global.VForm = VForm;

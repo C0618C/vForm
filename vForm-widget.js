@@ -69,7 +69,7 @@
         this.GetOption = _v_widget_GetOption;
         this.Check = _v_widget_Check;
         this.SetHint = _v_widget_SetHint;
-        this.I18N = vform.I18N.bind(vform);         //多语种翻译工具
+        this.I18N = vform?vform.I18N.bind(vform):function(x){return x;};         //多语种翻译工具
 
         //需要重载的API
         this.Refresh = _v_widget_Refresh;           //用于将值同步到控件上

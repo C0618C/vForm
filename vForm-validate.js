@@ -28,7 +28,7 @@
     //只能为数字 input:type=number
     Object.getPrototypeOf(VForm.Validate).isnum = function (widget, options) {
         if (options === false) return true;
-        return IsNum(widget.GetValue()) ? true : "【${name}】要求填写数字。";
+        return IsNum(widget.GetValue()) ? true : "【${name}】要求填写数字";
     }
 
     //最小值
@@ -42,7 +42,7 @@
             return Math.min(d,options) === options?true:"【${name}】不能小于：${options}。";
         }
 
-        return "【${name}】要求填写数字。";
+        return "【${name}】要求填写数字";
     }
     //最大值
     Object.getPrototypeOf(VForm.Validate).max = function (widget, options) {
@@ -52,10 +52,10 @@
         if(IsNum(d)){
             d*=1;
             options*=1;
-            return Math.max(d,options) === options?true:"【${name}】不能大于：${options}。";
+            return Math.max(d,options) === options?true:"【${name}】不能大于：${options}";
         }
 
-        return "【${name}】要求填写数字。";
+        return "【${name}】要求填写数字";
     }
 
     //介于[a,b]之间
@@ -70,7 +70,7 @@
             return (d>=min && d<=max)?true:"【${name}】只能介于："+min+"~"+max+"。";
         }
 
-        return "【${name}】要求填写数字。";
+        return "【${name}】要求填写数字";
     }
 
     //整数
@@ -84,7 +84,7 @@
             return Math.floor(d) === options?true:"【${name}】只能是整数。";
         }
 
-        return "【${name}】要求填写数字。";
+        return "【${name}】要求填写数字";
     }
 
     function IsNum(n) {
