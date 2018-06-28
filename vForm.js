@@ -51,6 +51,7 @@
         /* vForm 状态 */
         this.status = {
             name: "vForm"
+            ,dom_id:MakeAnId(10)
             , version: [0, 0, 2]                 //版本号
             , debug: {
                 isdebug: true                //是否调试模式
@@ -79,7 +80,8 @@
 
         /* 获取具体插件 */
         this.get = _vfAPIGet;
-        /*  */
+        /* 重置表单 */
+        this.Reset = _vfAPIReset;
         /* 销毁 */
         this.Destroy = _vfAPIDestroy; 
 
@@ -143,6 +145,7 @@
         return function (config) {
             this.baseSetting = config;
             this.SetOption(config);
+            this.status.dom_id+= config.id || "";
 
             //创建所有控件
             for (var i = 0; i < config.widgets.length; i++) {
@@ -159,6 +162,7 @@
             }
 
             var s = this.curSetting;
+            
             this.dom = document.createElement("table");
             this.dom.setAttribute("border", 1);
             for (var cl = 0; cl < s.column * 2; cl++) {
@@ -207,24 +211,25 @@
             }
 
             this.dom.className = "container vform";
-            document.body.appendChild(this.dom);    //FIXME:vForm创建完后如何加入文档对象
+
+            var f = document.createElement("form");
+            f.id = this.status.dom_id;
+            f.appendChild(this.dom);
+            document.body.appendChild(f);    //FIXME:vForm创建完后如何加入文档对象
+
+            this.dom = f;//DEBUG:用于测试表单重置
 
             VForm.__vFormObject__.push(this);
         }
     })();
-    //根据配置初始化
+    //根据配置初始化       //FIXME:动态调整配置
     var _vfAPISetOption = function (config) {
         for (var cf in config) {
             this.curSetting[cf] = config[cf];
         }
     }
     var _vfAPIGetOption = function () {
-        var r = {};
-        for (var cf in this.curSetting) {
-            if (typeof (this.curSetting[cf]) !== "function" && cf != "widgets")
-                r[cf] = this.curSetting[cf];
-        }
-        return r;
+        return DeepClone(this.curSetting);
     }
 
     /**
@@ -316,6 +321,11 @@
 
         console.warn("["+lang+"]需要翻译："+text);
         return text;
+    }
+
+    //重置表单
+    var _vfAPIReset = function(){
+        this.dom.reset();
     }
 
     //销毁表格

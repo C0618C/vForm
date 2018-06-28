@@ -89,7 +89,8 @@
 
     function IsNum(n) {
         if (typeof (n) === "number") return true;
-        if (typeof (n) !== "boolean" && n != null && n != "") return !isNaN(n);
-        return false;
+        // if (typeof (n) !== "boolean" && n != null && n != "") return !isNaN(n);
+        // return false;
+        return /-?(\d+|\d+\.\d+|\.\d+)([eE][-+]?\d+)?/.test(n);
     }
 })();
