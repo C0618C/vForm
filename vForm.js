@@ -284,11 +284,10 @@
             result[i].errinfo = this.I18N(result[i].errinfo);
             hash[result[i].id]=result[i];
         }
-        for (var id in this.widgetsHash) {
-            if(hash[id] === undefined) continue;
-            var rsl = "";
-            rsl = VForm.Format(hash[id]);
-            this.widgetsHash[id].SetHint(rsl);
+        //关掉
+        for (var i=0;i< this.widgets.length;i++) {
+            var id = this.widgets[i].id;
+            this.widgetsHash[id].SetHint(VForm.Format(hash[id]));
         }
     }
     /**

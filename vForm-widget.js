@@ -46,12 +46,13 @@
         this.dom = null;                        //整个文档对象，包含标签和对应的控件
         this.cell = null;                       //控件文档对象
         this.label = null;                      //标签文档对象
-        this.baseSetting = setting;             //默认设置
+        this.baseSetting = DeepClone(setting);             //默认设置
         this.curSetting = setting;              //当前设置、实际设置、最新设置
         this.ctrlId = null;                     //控件的ID
-        this.ctrlObj = null; //可以用于聚焦的控件
+        this.ctrlObj = null;                    //可以用于聚焦的控件
         this.requireObj = null;                 //用于显示必填的提示
         this.hintObj = null;                      //用于提示错误的元素
+        this.id=setting.id;
 
 
         //一般不需要重载的API
@@ -224,7 +225,7 @@
         if (isErr) {
             this.cell.className = this.cell.className + " vform_widget_error";
         } else {
-            this.cell.className = this.cell.className.replace("vform_widget_error", "");
+            this.cell.className = this.cell.className.replace(/\s*vform_widget_error\s*/igm, " ");
         }
     }
 

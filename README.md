@@ -1,5 +1,5 @@
 # vForm
-这是jQuery插件，将通过JSON配置生成页面表单。
+这是一套通过json配置表单的工具，包含。
 
 
 ## TODO: 

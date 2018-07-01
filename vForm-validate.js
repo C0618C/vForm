@@ -8,6 +8,7 @@
         console.log(this, x);
     }
     Object.getPrototypeOf(VForm.Validate).Format = function (errInfo) {
+        if (errInfo === undefined) return "";
         var reg = /\$\{[^{}]*?\}/;
         var msg = errInfo.errinfo;
         return msg.replace(/\$\{([^{}]*?)\}/g, function (match, key) { return errInfo[key] });
@@ -36,10 +37,10 @@
         if (options === false || !IsNum(options)) return true;
 
         var d = widget.GetValue();
-        if(IsNum(d)){
-            d*=1;
-            options*=1;
-            return Math.min(d,options) === options?true:"【${name}】不能小于：${options}。";
+        if (IsNum(d)) {
+            d *= 1;
+            options *= 1;
+            return Math.min(d, options) === options ? true : "【${name}】不能小于：${options}。";
         }
 
         return "【${name}】要求填写数字";
@@ -49,10 +50,10 @@
         if (options === false || !IsNum(options)) return true;
 
         var d = widget.GetValue();
-        if(IsNum(d)){
-            d*=1;
-            options*=1;
-            return Math.max(d,options) === options?true:"【${name}】不能大于：${options}";
+        if (IsNum(d)) {
+            d *= 1;
+            options *= 1;
+            return Math.max(d, options) === options ? true : "【${name}】不能大于：${options}";
         }
 
         return "【${name}】要求填写数字";
@@ -63,11 +64,11 @@
         if (options === false || !Array.isArray(options)) return true;
 
         var d = widget.GetValue();
-        if(IsNum(d)){
-            d*=1;
-            var min = Math.min(options[0]*1,options[1]*1);
-            var max = Math.max(options[0]*1,options[1]*1);
-            return (d>=min && d<=max)?true:"【${name}】只能介于："+min+"~"+max+"。";
+        if (IsNum(d)) {
+            d *= 1;
+            var min = Math.min(options[0] * 1, options[1] * 1);
+            var max = Math.max(options[0] * 1, options[1] * 1);
+            return (d >= min && d <= max) ? true : "【${name}】只能介于：" + min + "~" + max + "。";
         }
 
         return "【${name}】要求填写数字";
@@ -78,10 +79,10 @@
         if (options === false) return true;
 
         var d = widget.GetValue();
-        if(IsNum(d)){
-            d*=1;
-            options*=1;
-            return Math.floor(d) === options?true:"【${name}】只能是整数。";
+        if (IsNum(d)) {
+            d *= 1;
+            options *= 1;
+            return Math.floor(d) === options ? true : "【${name}】只能是整数。";
         }
 
         return "【${name}】要求填写数字";
