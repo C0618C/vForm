@@ -1,6 +1,6 @@
 {
     "column":2
-    ,"title":"XX申请信息"
+    ,"title":"XX申请信息","id":"BaseInfo"
     ,"theme":"light"
     ,"widgets":[
         {

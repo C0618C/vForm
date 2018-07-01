@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>vForm</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css"/>
+    
+    <link rel="stylesheet" type="text/css" href="../vform.css"/>
+    
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <!-- <script type="text/javascript" src="//cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script> -->
+   
+
+    <!--[if lt IE 9]>
+        <script type="text/javascript" src="../ie8-fix.js"></script>
+    <![endif]-->
+    <style>
+        #waper{margin-bottom: 150px;margin-top: 80px;}
+        #bottom_info{
+            height: 60px;
+            transition:height 1s;
+            overflow-y:auto;
+        }
+        #bottom_info hr{width:100%;}
+        #bottom_info #show_info{height:100%;}
+        #bottom_info #tool_bar{display: none;}
+        
+        #bottom_info:hover{height: 300px;}
+        #bottom_info:hover #tool_bar{display: inherit;}
+        .nav-item{cursor: pointer;}
+    </style>
+
+
+    <script src="../fortest.js"></script>
+    <script src="../common.js"></script>
+    <script src="../vForm.js"></script>
+    <script src="../vForm-widget.js"></script>
+    <script src="../vForm-validate.js"></script>
+    <script src="../vForm-i18n.js"></script>
+    <script src="../i18n/en.js"></script>
+    <script src="../vForm-debug.js"></script>
+</head>
+
+<body>
+<div>
+    <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
+        <a class="navbar-brand" href="#">API-Tester</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#1">创建</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#2">销毁</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="ck_bt">校验</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#4">表单数据</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    语种切换
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="#">中文</a>
+                        <a class="dropdown-item" href="#">English</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    可编辑切换
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="#">只读</a>
+                        <a class="dropdown-item" href="#">可编辑</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div id="waper"></div>
+<nav id="bottom_info" class="navbar fixed-bottom navbar-light bg-light">
+    <div id="show_info"></div>
+    <div id="tool_bar" class="navbar fixed-bottom navbar-light bg-light">
+        <button id="clear_info" type="button" class="btn btn-light btn-sm">清空</button>
+    </div>
+</nav>
+</body>
+<script src="test.js"></script>
+<script>
+    (function(){
+        $("#ck_bt").on("click",function(){
+            VForm.each(function(){
+                var r = this.Check();
+                Test_Log("表单["+this.curSetting.id+"]校验结果："+(r===true?"通过":JSON.stringify(r)));
+            });
+        });
+        $("#clear_info").on("click",function(){
+            $("#show_info").empty();
+        })
+    })();
+
+    function Test_Log(text){
+        $("#show_info").prepend($("<div>"+text+"</div><hr/>"));
+    }
+</script>
+</html>

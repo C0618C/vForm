@@ -21,7 +21,7 @@
 * [ ] 表格\控件的销毁重载
 * [ ] 表格\控件的只读模式
 * [ ] 控件开发
-    * [ ] Select
+    * [-] Select
     * [ ] Date
     * [ ] SelectGrid
     * [ ] tree

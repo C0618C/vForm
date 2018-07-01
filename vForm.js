@@ -26,6 +26,12 @@
         return w;
     };
 
+    var _vfAPI_each_ = function(fun,param){
+        for (var x in VForm.__vFormObject__) {
+            fun.bind(VForm.__vFormObject__[x])(param);
+        }
+    }
+
     /**
      * 事件绑定工具
      * @param {object} obj 待绑定事件的对象
@@ -105,6 +111,9 @@
     //根据传入参数（#id #widget-id），找出需要获取的vForm对象或对应控件
     Object.getPrototypeOf(VForm).$ = _vfAPI_$_;
 
+    //每一个表单
+    Object.getPrototypeOf(VForm).each = _vfAPI_each_;
+
     //事件绑定
     Object.getPrototypeOf(VForm).on = _vfAPI_on__;
 
@@ -143,7 +152,7 @@
     //根据配置初始化
     var _vf_init = (function () {
         return function (config) {
-            this.baseSetting = config;
+            this.baseSetting = DeepClone(config);
             this.SetOption(config);
             this.status.dom_id+= config.id || "";
 
@@ -157,8 +166,7 @@
             if (this.widgets.length === 1 && config.widgets[0].type === "table") {
                 this.dom = this.widgets[0].cell;
                 this.dom.className = "container vform vfTable";
-                document.body.appendChild(this.dom);    //FIXME:vForm创建完后如何加入文档对象
-                return;
+                return this.dom;
             }
 
             var s = this.curSetting;
@@ -215,11 +223,11 @@
             var f = document.createElement("form");
             f.id = this.status.dom_id;
             f.appendChild(this.dom);
-            document.body.appendChild(f);    //FIXME:vForm创建完后如何加入文档对象
 
             this.dom = f;//DEBUG:用于测试表单重置
 
             VForm.__vFormObject__.push(this);
+            return this.dom;
         }
     })();
     //根据配置初始化       //FIXME:动态调整配置
