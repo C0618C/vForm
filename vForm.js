@@ -69,6 +69,7 @@
         this.widgetsHash = {};                  //通过ID索引的控件对象
         this.widgets = [];
         this.dom = null;
+        this.id = "";
 
         //APIs
         /* 根据配置初始化 */
@@ -155,6 +156,7 @@
             this.baseSetting = DeepClone(config);
             this.SetOption(config);
             this.status.dom_id+= config.id || "";
+            this.id=config.id;
 
             //创建所有控件
             for (var i = 0; i < config.widgets.length; i++) {
@@ -276,20 +278,21 @@
         }
     };
 
-    //更新错误状态，正确处理错误提示
-    function _vf_ResetErr(result) {
-        var hash ={};
-        for (var i = 0; i < result.length; i++) {
-            result[i].name = this.I18N(result[i].name);
-            result[i].errinfo = this.I18N(result[i].errinfo);
-            hash[result[i].id]=result[i];
-        }
-        //关掉
-        for (var i=0;i< this.widgets.length;i++) {
-            var id = this.widgets[i].id;
-            this.widgetsHash[id].SetHint(VForm.Format(hash[id]));
-        }
-    }
+    // //更新错误状态，正确处理错误提示
+    // function _vf_ResetErr(result) {
+    //     var hash ={};
+    //     for (var i = 0; i < result.length; i++) {
+    //         result[i].name = this.I18N(result[i].name);
+    //         result[i].errinfo = this.I18N(result[i].errinfo);
+    //         hash[result[i].id]=result[i];
+    //     }
+    //     //关掉
+    //     for (var i=0;i< this.widgets.length;i++) {
+    //         var id = this.widgets[i].id;
+    //         this.widgetsHash[id].SetHint(VForm.Format(hash[id]));
+    //     }
+    // }
+    
     /**
      * 检查表单数据有效性
      * @returns true | [{name,errinfo},...]
@@ -305,7 +308,7 @@
             }
         }
 
-        _vf_ResetErr.bind(this)(result);
+        //_vf_ResetErr.bind(this)(result);
         return result.length === 0 ? true : result;
     }
 

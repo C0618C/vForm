@@ -111,12 +111,18 @@
     function _v_widget_Create() {
         var obj = null;
         var s = this.curSetting;
+        this.hintObj = document.createElement("span");
+        this.hintObj.className = "text-danger";            //错误语的样式
 
-        if (this.IsCtrl()) {
+        if (this.IsCtrl() || s.readonly_text === false) {
             obj = this._createDomObj();
             if (this.ctrlObj === null) this.ctrlObj = obj;
+            if(s.readonly_text === false && obj) obj.setAttribute("disabled","disabled");
         } else {
-            obj = document.createElement("span");
+            obj = document.createElement("p");//只读情况
+            obj.className = "vform_widget_readonly"
+            //obj.innerHTML = "&nbsp;";
+            this.ctrlObj = obj;
         }
         if (this.ctrlObj) {
             var wg = this;
@@ -134,8 +140,6 @@
 
             this.cell.appendChild(obj);
         }
-        this.hintObj = document.createElement("span");
-        this.hintObj.className = "text-danger";            //错误语的样式
         this.cell.appendChild(this.hintObj);
         if (s.value !== undefined) this.SetValue(s.value, true);
 
@@ -178,12 +182,12 @@
     }
     function _v_widget_SetValue(value, isRefresh) {
         this.data.value = value;
-        this.Check();
+        var rsl = this.Check();
         if (isRefresh !== false) this.Refresh("value");
     }
     function _v_widget_IsCtrl() {
         //TODO:处理node_code的可控制权限
-        return !(this.curSetting.readonly === false);// && this.curSetting.node_code
+        return (this.curSetting.readonly !== true);// && this.curSetting.node_code
     }
     function _v_widget_Focus() {
         return this.ctrlObj ? this.ctrlObj.focus() : false;
@@ -203,29 +207,41 @@
         } else {
             //TODO: 『通用控件』【只读】状态下的值设置
             //document.getElementById(this.ctrlId).innerText = this.GetText();
+            this.ctrlObj.innerText = this.GetText();
         }
     }
 
     //校验控件的所有规则
     function _v_widget_Check() {
+        var rsl = true;
         if (VForm.Validate) {
             for (var x in this.curSetting.validate) {
                 var options = this.curSetting.validate[x];
                 var rsl = VForm.Validate[x] ? VForm.Validate[x](this, options) : true;
-                if (rsl !== true) return { name: this.curSetting.name, errinfo: rsl, id: this.curSetting.id, options: options };
+                if (rsl !== true) {
+                    rsl = { name: this.curSetting.name, errinfo: rsl, id: this.curSetting.id, options: options };
+                    break;
+                }
             }
         }
-        return true;
+        this.SetHint(rsl,rsl!==true);
+        return rsl;
     }
 
-    function _v_widget_SetHint(str, isErr) {
-        this.hintObj.innerHTML = str;
-        if (isErr === undefined) isErr = str !== "";
+    //FIXME: 尚未完成的错误提示
+    function _v_widget_SetHint(hint, isErr) {
+        console.log(hint);
+        // this.hintObj.innerHTML = str;
+        if (isErr === undefined) isErr = hint !== "";
 
         if (isErr) {
             this.cell.className = this.cell.className + " vform_widget_error";
+            hint.name = this.I18N(hint.name);
+            hint.errinfo = this.I18N(hint.errinfo);
+            this.hintObj.innerHTML= VForm.Format(hint);
         } else {
             this.cell.className = this.cell.className.replace(/\s*vform_widget_error\s*/igm, " ");
+            this.hintObj.innerHTML="";
         }
     }
 
@@ -292,6 +308,7 @@
                 o.name = n;
                 o.value = ss.options[i].value;
                 o.setAttribute("data-text", ss.options[i].text);
+                if(ss.readonly_text === false) o.setAttribute("disabled","disabled");
                 o.id = id;
                 o.className = "form_check_input";
                 this.idxhash[o.value] = o;

@@ -9,6 +9,7 @@
     }
     Object.getPrototypeOf(VForm.Validate).Format = function (errInfo) {
         if (errInfo === undefined) return "";
+        if (typeof(errInfo) === "string") return errInfo;
         var reg = /\$\{[^{}]*?\}/;
         var msg = errInfo.errinfo;
         return msg.replace(/\$\{([^{}]*?)\}/g, function (match, key) { return errInfo[key] });

@@ -21,13 +21,13 @@
         Ajax({ url: "form.1.json", method: "GET" }).then(function (d) {
             waper.appendChild(vf.Init(d));
         })
-        Ajax({ url: "form.json", method: "GET" }).then(function (d) {
-            waper.appendChild((new VForm()).Init(d));
-        })
         Ajax({ url: "form.2.json", method: "GET" }).then(function (d) {
             waper.appendChild((new VForm()).Init(d));
         })
         Ajax({ url: "form.3.json", method: "GET" }).then(function (d) {
+            waper.appendChild((new VForm()).Init(d));
+        })
+        Ajax({ url: "form.4.json", method: "GET" }).then(function (d) {
             waper.appendChild((new VForm()).Init(d));
         })
         window.$vf = vf

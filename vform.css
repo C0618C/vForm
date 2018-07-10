@@ -35,3 +35,6 @@
 .vform .vform_widget_error .vform_widget_text{
     border-color: #dc3545!important;
 }
+.vform .vform_widget_readonly {
+    min-width: 50px;
+}

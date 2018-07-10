@@ -66,7 +66,7 @@
                     <a class="nav-link" id="ck_bt">校验</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#4">表单数据</a>
+                    <a class="nav-link" id="data_bt">表单数据</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -101,10 +101,16 @@
 <script src="test.js"></script>
 <script>
     (function(){
+        $("#data_bt").on("click",function(){
+            VForm.each(function(){
+                var r = this.GetData();
+                Test_Log(this.id+":"+JSON.stringify(r));
+            });
+        });
         $("#ck_bt").on("click",function(){
             VForm.each(function(){
                 var r = this.Check();
-                Test_Log("表单["+this.curSetting.id+"]校验结果："+(r===true?"通过":JSON.stringify(r)));
+                Test_Log("表单["+this.id+"]校验结果："+(r===true?"通过":JSON.stringify(r)));
             });
         });
         $("#clear_info").on("click",function(){
