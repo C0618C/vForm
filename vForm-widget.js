@@ -52,7 +52,7 @@
         this.ctrlObj = null;                    //可以用于聚焦的控件
         this.requireObj = null;                 //用于显示必填的提示
         this.hintObj = null;                      //用于提示错误的元素
-        this.id=setting.id;
+        this.id = setting.id;
 
 
         //一般不需要重载的API
@@ -70,7 +70,7 @@
         this.GetOption = _v_widget_GetOption;
         this.Check = _v_widget_Check;
         this.SetHint = _v_widget_SetHint;
-        this.I18N = vform?vform.I18N.bind(vform):function(x){return x;};         //多语种翻译工具
+        this.I18N = vform ? vform.I18N.bind(vform) : function (x) { return x; };         //多语种翻译工具
 
         //需要重载的API
         this.Refresh = _v_widget_Refresh;           //用于将值同步到控件上
@@ -115,9 +115,9 @@
         this.hintObj.className = "text-danger";            //错误语的样式
 
         if (this.IsCtrl() || s.readonly_text === false) {
-            obj = this._createDomObj();
+            obj = this._createDomObj(s);
             if (this.ctrlObj === null) this.ctrlObj = obj;
-            if(s.readonly_text === false && obj) obj.setAttribute("disabled","disabled");
+            if (s.readonly_text === false && obj) obj.setAttribute("disabled", "disabled");
         } else {
             obj = document.createElement("p");//只读情况
             obj.className = "vform_widget_readonly"
@@ -224,24 +224,26 @@
                 }
             }
         }
-        this.SetHint(rsl,rsl!==true);
+        this.SetHint(rsl);
         return rsl;
     }
 
     //FIXME: 尚未完成的错误提示
-    function _v_widget_SetHint(hint, isErr) {
-        console.log(hint);
-        // this.hintObj.innerHTML = str;
-        if (isErr === undefined) isErr = hint !== "";
+    function _v_widget_SetHint(hint) {
+        var isErr = hint !== "" && hint !== true;
 
         if (isErr) {
             this.cell.className = this.cell.className + " vform_widget_error";
-            hint.name = this.I18N(hint.name);
-            hint.errinfo = this.I18N(hint.errinfo);
-            this.hintObj.innerHTML= VForm.Format(hint);
+            if (hint.name && hint.errinfo) {
+                hint.name = this.I18N(hint.name);
+                hint.errinfo = this.I18N(hint.errinfo);
+                this.hintObj.innerHTML = VForm.Format(hint);
+            }else if(typeof(hint)==="string"){
+                this.hintObj.innerHTML = hint;
+            }
         } else {
             this.cell.className = this.cell.className.replace(/\s*vform_widget_error\s*/igm, " ");
-            this.hintObj.innerHTML="";
+            this.hintObj.innerHTML = "";
         }
     }
 
@@ -291,7 +293,7 @@
         vfWidget.call(this, setting, vform);
         var s = setting;
         var n = s.select_name || MakeAnId(10);
-        this.idxhash = {};
+        this.idxhash = {};//缓存的checkbox、radio,可通过value值快速查找。
 
         //根据options里的选项，进行初始化
         this._CreateByOptions = function () {
@@ -308,7 +310,7 @@
                 o.name = n;
                 o.value = ss.options[i].value;
                 o.setAttribute("data-text", ss.options[i].text);
-                if(ss.readonly_text === false) o.setAttribute("disabled","disabled");
+                if (ss.readonly_text === false) o.setAttribute("disabled", "disabled");
                 o.id = id;
                 o.className = "form_check_input";
                 this.idxhash[o.value] = o;
@@ -401,6 +403,29 @@
         return this;
     });
 
+    
+    //Select控件
+    VFWidgetFactory.AddWidget("select", function (setting, vform) {
+        vfWidget.call(this, setting, vform);
+        var s = setting;
+        var n = s.select_name || MakeAnId(10);
+        this.idxhash = {};
+
+        this._createDomObj = function(cs){
+            var obj = document.createElement("select");
+            obj.className = "vform_widget_text"
+            for(var v = 0;v<cs.options.length;v++){      //TODO: 选项是异步加载的情况
+                var o = document.createElement("option");
+                o.innerText = this.I18N(cs.options[v].text);
+                o.setAttribute("value",cs.options[v].value);
+                obj.appendChild(o);
+            }
+            return obj;
+        }
+
+        this.Create();
+        return this;
+    });
 
     //TODO: Table控件
     VFWidgetFactory.AddWidget("table", function (setting, vform) {

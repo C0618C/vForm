@@ -9,7 +9,11 @@
             , "align": "left","options":[{"value":1,"text":"是"},{"value":0,"text":"否"}]
             , "validate": { "require": false }
         }
-
+        ,{
+            "id": "f2"
+            , "select_name": "select", "type": "select", "name": "下拉"
+            , "validate": { "require": true },"options":[{"value":1,"text":"上午"},{"value":0,"text":"中午"},{"value":2,"text":"下午"},{"value":3,"text":"晚上"},{"value":4,"text":"深夜"},{"value":5,"text":"凌晨"}]
+        }
         ,{
             "id": "f2"
             , "select_name": "FunAreaText2", "type": "password", "name": "控件2"
