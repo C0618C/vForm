@@ -75,7 +75,7 @@
             }
             var s = window.myChild.document.createElement("script");
             s.setAttribute("type","text/javascript");
-            s.innerHTML="(function(){(new VForm()).Init("+script+");})();";
+            s.innerHTML="(function(){document.body.appendChild((new VForm()).Init("+script+"));})();";
             window.myChild.document.body.appendChild(s);
         }
 

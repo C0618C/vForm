@@ -411,16 +411,31 @@
         var n = s.select_name || MakeAnId(10);
         this.idxhash = {};
 
+        var unselectString = "-!us!-";
         this._createDomObj = function(cs){
             var obj = document.createElement("select");
-            obj.className = "vform_widget_text"
+            obj.className = "vform_widget_text";
+            cs.options.unshift({text:"= 请选择 =",value:unselectString})
             for(var v = 0;v<cs.options.length;v++){      //TODO: 选项是异步加载的情况
                 var o = document.createElement("option");
                 o.innerText = this.I18N(cs.options[v].text);
                 o.setAttribute("value",cs.options[v].value);
                 obj.appendChild(o);
             }
-            return obj;
+
+            var wg = this;
+            VForm.on(obj, "change", function () {
+                var r = [];
+                for (var i=0;i<obj.selectedOptions.length;i++) {
+                    if(obj.selectedOptions[i].value === unselectString) continue;
+                    r.push({ text: obj.selectedOptions[i].text, value: obj.selectedOptions[i].value });
+                }
+                if(r.length ===1) r=r[0];
+                wg.SetData(r, false);
+            });
+
+            this.cell.appendChild(obj);
+            return null;
         }
 
         this.Create();

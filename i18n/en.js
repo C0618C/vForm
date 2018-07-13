@@ -13,11 +13,17 @@
         ,"地址":"address"
         ,"搜索":"search"
         ,"是":"Yes","否":"No"
+        ,"= 请选择 =":"= Please Select ="
 
 
         /************ Validate *************/
         ,"【${name}】要求填写数字":"[${name}] Require a number."
         ,"【${name}】不允许为空":"[${name}] Not allowed to be empty."
         ,"【${name}】不能大于：${options}":"[${name}] ust be less than: ${options}."
+        
+        /************ 测试 *************/
+        ,"上午":"Morning"
+        ,"中午":"Afteroon"
+        ,"深夜":"Midnight"
     }
 })();

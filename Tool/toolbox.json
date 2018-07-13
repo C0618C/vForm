@@ -18,6 +18,11 @@
         , "validate": { "require": false }
     }
     ,{
+        "id": "_widget_select"
+        , "select_name": "select", "type": "select", "name": "下拉"
+        , "validate": { "require": false },"options":[{"value":1,"text":"选项一"},{"value":0,"text":"选项二"},{"value":1,"text":"选项三"}]
+    }
+    ,{
         "id": "tesx1"
         , "select_name": "FunAreaText2", "type": "number", "name": "数字"
         , "align": "left","placeholder":"请输入数字"
