@@ -68,6 +68,7 @@
         this.ToString = _v_widget_ToString;
         this.Create = _v_widget_Create;
         this.GetOption = _v_widget_GetOption;
+        this.SetOption = _v_widget_SetOption;
         this.Check = _v_widget_Check;
         this.SetHint = _v_widget_SetHint;
         this.I18N = vform ? vform.I18N.bind(vform) : function (x) { return x; };         //多语种翻译工具
@@ -196,6 +197,11 @@
     function _v_widget_GetOption() {
         return this.curSetting;
     }
+
+    function _v_widget_SetOption(option) {//TODO: 需要完成控件的动态设置
+        return false;
+    }
+
 
     function _v_widget_Refresh(type) {
         if (this.IsCtrl() && this.ctrlObj) {

@@ -26,7 +26,7 @@
         return w;
     };
 
-    var _vfAPI_each_ = function(fun,param){
+    var _vfAPI_each_ = function (fun, param) {
         for (var x in VForm.__vFormObject__) {
             fun.bind(VForm.__vFormObject__[x])(param);
         }
@@ -57,7 +57,7 @@
         /* vForm 状态 */
         this.status = {
             name: "vForm"
-            ,dom_id:MakeAnId(10)
+            , dom_id: MakeAnId(10)
             , version: [0, 0, 2]                 //版本号
             , debug: {
                 isdebug: true                //是否调试模式
@@ -78,6 +78,9 @@
         this.SetOption = _vfAPISetOption;
         this.GetOption = _vfAPIGetOption;
 
+        //更新控件的设置
+        this.UpdateWidget = _vfAPIUpdateWidget;
+
         /* 拿到表单数据 */
         this.GetData = _vfAPIGetData;
         /* 设置表单数据 */
@@ -90,7 +93,7 @@
         /* 重置表单 */
         this.Reset = _vfAPIReset;
         /* 销毁 */
-        this.Destroy = _vfAPIDestroy; 
+        this.Destroy = _vfAPIDestroy;
 
         /* 检查表单数据有效性
         返回：true / [{name,errinfo},...]
@@ -131,13 +134,13 @@
                     if (typeof _console[a] !== "function")
                         console[a] = _console[a];
                     else
-                    (function (a) {
-                        console[a] = function (x, y, z) {
-                            if (!vf.status.debug.isdebug) return;
-                            //if (a != "trace" && _console.trace) _console.trace();
-                            return _console[a](x, y, z);
-                        }
-                    })(a);
+                        (function (a) {
+                            console[a] = function (x, y, z) {
+                                if (!vf.status.debug.isdebug) return;
+                                //if (a != "trace" && _console.trace) _console.trace();
+                                return _console[a](x, y, z);
+                            }
+                        })(a);
                 }
                 console.trustees = vf.status.name;
             } else {
@@ -152,11 +155,12 @@
 
     //根据配置初始化
     var _vf_init = (function () {
+        ``
         return function (config) {
             this.baseSetting = DeepClone(config);
             this.SetOption(config);
-            this.status.dom_id+= config.id || "";
-            this.id=config.id;
+            this.status.dom_id += config.id || "";
+            this.id = config.id;
 
             //创建所有控件
             for (var i = 0; i < config.widgets.length; i++) {
@@ -172,7 +176,7 @@
             }
 
             var s = this.curSetting;
-            
+
             this.dom = document.createElement("table");
             this.dom.setAttribute("border", 1);
             for (var cl = 0; cl < s.column * 2; cl++) {
@@ -235,11 +239,20 @@
     //根据配置初始化       //FIXME:动态调整配置
     var _vfAPISetOption = function (config) {
         for (var cf in config) {
-            this.curSetting[cf] = config[cf];
+            if (cf === "widgets") {
+                this.UpdateWidget(config[cf]);
+            } else
+                this.curSetting[cf] = config[cf];
         }
     }
     var _vfAPIGetOption = function () {
         return DeepClone(this.curSetting);
+    }
+
+    var _vfAPIUpdateWidget = function (options) {
+        for (var x = 0; x < options.length; x++) {
+            if (options[x].id) this.get(options[x].id).SetOption(options[x]);
+        }
     }
 
     /**
@@ -247,8 +260,8 @@
      * @param {string} language 
      */
     var _vfAPISetLanguage = function (language) {
-        if(VForm.InitLang === undefined) return;//没引入语言模块
-        if(!VForm.InitLang(language)) return;//引用语言包失败
+        if (VForm.InitLang === undefined) return;//没引入语言模块
+        if (!VForm.InitLang(language)) return;//引用语言包失败
         this.status.lang = language;
     }
 
@@ -278,21 +291,6 @@
         }
     };
 
-    // //更新错误状态，正确处理错误提示
-    // function _vf_ResetErr(result) {
-    //     var hash ={};
-    //     for (var i = 0; i < result.length; i++) {
-    //         result[i].name = this.I18N(result[i].name);
-    //         result[i].errinfo = this.I18N(result[i].errinfo);
-    //         hash[result[i].id]=result[i];
-    //     }
-    //     //关掉
-    //     for (var i=0;i< this.widgets.length;i++) {
-    //         var id = this.widgets[i].id;
-    //         this.widgetsHash[id].SetHint(VForm.Format(hash[id]));
-    //     }
-    // }
-    
     /**
      * 检查表单数据有效性
      * @returns true | [{name,errinfo},...]
@@ -323,25 +321,25 @@
      * @param {string} text 需要翻译的文本
      * @param {string} lang 需要翻译的语种，默认为空，取status.lang中设置
      */
-    var _vfAPITranslate = function(text,lang){
-        if(lang === undefined) lang = this.status.lang;
-        if(lang === this.status.def_lang) return text;
+    var _vfAPITranslate = function (text, lang) {
+        if (lang === undefined) lang = this.status.lang;
+        if (lang === this.status.def_lang) return text;
 
-        if(VForm.I18N[lang] && VForm.I18N[lang][text] !== undefined) return VForm.I18N[lang][text];
+        if (VForm.I18N[lang] && VForm.I18N[lang][text] !== undefined) return VForm.I18N[lang][text];
 
-        console.warn("["+lang+"]需要翻译："+text);
+        console.warn("[" + lang + "]需要翻译：" + text);
         return text;
     }
 
     //重置表单
-    var _vfAPIReset = function(){
+    var _vfAPIReset = function () {
         this.dom.reset();
     }
 
     //销毁表格
-    var _vfAPIDestroy = function(){
+    var _vfAPIDestroy = function () {
         this.dom.remove();
-        this.widgets=[];
+        this.widgets = [];
         this.widgetsHash = {};
         this.dom = null;
     }
