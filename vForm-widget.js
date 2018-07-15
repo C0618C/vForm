@@ -118,7 +118,7 @@
         if (this.IsCtrl() || s.readonly_text === false) {
             obj = this._createDomObj(s);
             if (this.ctrlObj === null) this.ctrlObj = obj;
-            if (s.readonly_text === false && obj) obj.setAttribute("disabled", "disabled");
+            if (s.readonly && s.readonly_text === false && obj) obj.setAttribute("disabled", "disabled");
         } else {
             obj = document.createElement("p");//只读情况
             obj.className = "vform_widget_readonly"
@@ -152,8 +152,8 @@
         // }
     }
 
-    function _v_widget_Rebuild(){
-        this.cell.innerText="";
+    function _v_widget_Rebuild() {
+        this.cell.innerText = "";
         this.ctrlObj = null;
         this.Create();
         this.Refresh("value");
@@ -205,8 +205,8 @@
     }
 
     function _v_widget_SetOption(option) {//TODO: 需要完成控件的动态设置
-        for(var o in option){
-            this.curSetting[o]=DeepClone(option[o]);
+        for (var o in option) {
+            this.curSetting[o] = DeepClone(option[o]);
         }
         this.Rebuild();
 
@@ -215,7 +215,7 @@
 
 
     function _v_widget_Refresh(type) {
-        if (this.IsCtrl() && this.ctrlObj) {
+        if ((this.IsCtrl() && this.ctrlObj) || this.curSetting.readonly_text === false) {
             switch (type) {
                 case "value":
                     this.ctrlObj.value = this.GetValue();
@@ -255,7 +255,7 @@
                 hint.name = this.I18N(hint.name);
                 hint.errinfo = this.I18N(hint.errinfo);
                 this.hintObj.innerHTML = VForm.Format(hint);
-            }else if(typeof(hint)==="string"){
+            } else if (typeof (hint) === "string") {
                 this.hintObj.innerHTML = hint;
             }
         } else {
@@ -269,6 +269,8 @@
         //继承父类
         vfWidget.call(this, setting, vform);
 
+        if (setting.type === "password") this.curSetting.readonly_text = false;
+        
         //重载子类方法
         this._createDomObj = function () {
             var t = setting.type;
@@ -329,7 +331,7 @@
                 o.name = n;
                 o.value = ss.options[i].value;
                 o.setAttribute("data-text", ss.options[i].text);
-                if (ss.readonly_text === false) o.setAttribute("disabled", "disabled");
+                if (ss.readonly && ss.readonly_text === false) o.setAttribute("disabled", "disabled");
                 o.id = id;
                 o.className = "form_check_input";
                 this.idxhash[o.value] = o;
@@ -397,7 +399,7 @@
 
         var super_Refresh = this.Refresh;
         this.Refresh = function (type) {
-            if (this.IsCtrl()) {
+            if (this.IsCtrl() || this.curSetting.readonly_text === false) {
                 switch (type) {
                     case "text":
                         if (this.data.text.length > 0) {
@@ -422,7 +424,7 @@
         return this;
     });
 
-    
+
     //Select控件
     VFWidgetFactory.AddWidget("select", function (setting, vform) {
         vfWidget.call(this, setting, vform);
@@ -431,25 +433,25 @@
         this.idxhash = {};
 
         var unselectString = "-!us!-";
-        this._createDomObj = function(cs){
+        this._createDomObj = function (cs) {
             var obj = document.createElement("select");
             obj.className = "vform_widget_text";
-            cs.options.unshift({text:"= 请选择 =",value:unselectString})
-            for(var v = 0;v<cs.options.length;v++){      //TODO: 选项是异步加载的情况
+            cs.options.unshift({ text: "= 请选择 =", value: unselectString })
+            for (var v = 0; v < cs.options.length; v++) {      //TODO: 选项是异步加载的情况
                 var o = document.createElement("option");
                 o.innerText = this.I18N(cs.options[v].text);
-                o.setAttribute("value",cs.options[v].value);
+                o.setAttribute("value", cs.options[v].value);
                 obj.appendChild(o);
             }
 
             var wg = this;
             VForm.on(obj, "change", function () {
                 var r = [];
-                for (var i=0;i<obj.selectedOptions.length;i++) {
-                    if(obj.selectedOptions[i].value === unselectString) continue;
+                for (var i = 0; i < obj.selectedOptions.length; i++) {
+                    if (obj.selectedOptions[i].value === unselectString) continue;
                     r.push({ text: obj.selectedOptions[i].text, value: obj.selectedOptions[i].value });
                 }
-                if(r.length ===1) r=r[0];
+                if (r.length === 1) r = r[0];
                 wg.SetData(r, false);
             });
 
