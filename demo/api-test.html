@@ -82,8 +82,8 @@
                     可编辑切换
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="#">只读</a>
-                        <a class="dropdown-item" href="#">可编辑</a>
+                        <a class="dropdown-item" href="#" id="readonly_bt">只读</a>
+                        <a class="dropdown-item" href="#" id="canedit_bt">可编辑</a>
                     </div>
                 </li>
             </ul>
@@ -115,11 +115,30 @@
         });
         $("#clear_info").on("click",function(){
             $("#show_info").empty();
-        })
+        });
+        $("#readonly_bt").on("click",function(){
+            EditChange(false);
+        });
+        $("#canedit_bt").on("click",function(){
+            EditChange(true);
+        });
+
     })();
 
     function Test_Log(text){
         $("#show_info").prepend($("<div>"+text+"</div><hr/>"));
+    }
+
+    function EditChange(isEdit){
+        VForm.each(function(){
+            var op = this.GetOption();
+
+            var newSetting={widgets:[]};
+            for(var w in op.widgets){
+                newSetting.widgets.push({id:op.widgets[w].id,"readonly":!isEdit});
+            }
+            this.SetOption(newSetting);
+        });
     }
 </script>
 </html>

@@ -14,6 +14,8 @@ function DeepClone(obj,level){
     if(level===undefined) level = 0;
     if(level >= 10) return null;
 
+    if(typeof(obj)!== "object")return obj;
+    
     var tObj = {};
     for(var o in obj){
         tObj[o] = (typeof(obj[o]) === "object")?DeepClone(obj[o],level+1):obj[o];

@@ -72,11 +72,11 @@
         this.Check = _v_widget_Check;
         this.SetHint = _v_widget_SetHint;
         this.I18N = vform ? vform.I18N.bind(vform) : function (x) { return x; };         //多语种翻译工具
+        this.Rebuild = _v_widget_Rebuild;
 
         //需要重载的API
         this.Refresh = _v_widget_Refresh;           //用于将值同步到控件上
-        this._createDomObj = null;      //创建实际的控件
-        this.SetOption = null;
+        this._createDomObj = null;                  //创建实际的控件(只读控件用通用的)
 
         parent = vform;
         _v_widget_Init_bs.call(this, vform);
@@ -142,15 +142,21 @@
             this.cell.appendChild(obj);
         }
         this.cell.appendChild(this.hintObj);
-        if (s.value !== undefined) this.SetValue(s.value, true);
 
-        //DEBUG: 便于测试的特性
-        {
-            this.dom.setAttribute("role", "dom");
-            this.cell.setAttribute("role", "cell");
-            if (this.label) this.label.setAttribute("role", "label");
-            if (this.ctrlObj) this.ctrlObj.setAttribute("role", "ctrlObj");
-        }
+        // //DEBUG: 便于测试的特性
+        // {
+        //     this.dom.setAttribute("role", "dom");
+        //     this.cell.setAttribute("role", "cell");
+        //     if (this.label) this.label.setAttribute("role", "label");
+        //     if (this.ctrlObj) this.ctrlObj.setAttribute("role", "ctrlObj");
+        // }
+    }
+
+    function _v_widget_Rebuild(){
+        this.cell.innerText="";
+        this.ctrlObj = null;
+        this.Create();
+        this.Refresh("value");
     }
 
     function _v_widget_GetData() {
@@ -199,6 +205,11 @@
     }
 
     function _v_widget_SetOption(option) {//TODO: 需要完成控件的动态设置
+        for(var o in option){
+            this.curSetting[o]=DeepClone(option[o]);
+        }
+        this.Rebuild();
+
         return false;
     }
 
@@ -290,6 +301,8 @@
         }
 
         this.Create();
+        if (this.curSetting.value !== undefined) this.SetValue(this.curSetting.value, true);
+
         this.Refresh("value");
         return this;
     });
@@ -382,6 +395,7 @@
         }
 
 
+        var super_Refresh = this.Refresh;
         this.Refresh = function (type) {
             if (this.IsCtrl()) {
                 switch (type) {
@@ -401,8 +415,7 @@
                         break;
                 }
             } else {
-                //TODO: 『checkbox|radio』【只读】状态下的值设置
-                //document.getElementById(this.ctrlId).innerText = this.GetText();
+                super_Refresh.bind(this)(type);
             }
         }
 
@@ -441,6 +454,7 @@
             });
 
             this.cell.appendChild(obj);
+            this.ctrlObj = obj;
             return null;
         }
 

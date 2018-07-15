@@ -158,7 +158,8 @@
         ``
         return function (config) {
             this.baseSetting = DeepClone(config);
-            this.SetOption(config);
+            this.curSetting = DeepClone(config);
+            //this.SetOption(config);
             this.status.dom_id += config.id || "";
             this.id = config.id;
 
