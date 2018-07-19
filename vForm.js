@@ -179,6 +179,7 @@
             var s = this.curSetting;
 
             this.dom = document.createElement("table");
+            var tbd = document.createElement("tbody");
             this.dom.setAttribute("border", 1);
             for (var cl = 0; cl < s.column * 2; cl++) {
                 var c = document.createElement("col");
@@ -192,13 +193,24 @@
                 var tt = document.createElement("caption");
                 tt.innerText = s.title;
                 tt.className = "headtitle" + " bg-" + s.theme;
+
+                var tg=document.createElement("div");
+                tg.className="vform_form_toggle off";
+
+                var ss = ["none",""];
+                var si =1;
+                VForm.on(tg,"click",function(){
+                    tbd.style.display=ss[++si%2];
+                    tg.className=ss[si%2]==''?"vform_form_toggle off":"vform_form_toggle on";
+                })
+
+                tt.appendChild(tg)
                 this.dom.appendChild(tt);
             }
 
             //组装到框架里去
             var r = null;
             var rC = 0;
-            var tbd = document.createElement("tbody");
             for (var i = 0; i < this.widgets.length; i++) {
                 var w = this.widgets[i];
                 if (rC % s.column == 0 || r == null) {

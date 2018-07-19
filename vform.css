@@ -38,3 +38,19 @@
 .vform .vform_widget_readonly {
     min-width: 50px;
 }
+
+.vform .vform_form_toggle{
+    float:right;
+    margin-right: 25px;
+    border:1px solid gray;
+    width:25px;height: 25px;
+    cursor: pointer;
+    border-radius: 12px 12px;
+    text-align: center;
+}
+.vform .vform_form_toggle.on::after{
+    content: '+';
+}
+.vform .vform_form_toggle.off::after{
+    content: '-';
+}
