@@ -155,11 +155,10 @@
 
     //根据配置初始化
     var _vf_init = (function () {
-        ``
         return function (config) {
             this.baseSetting = DeepClone(config);
             this.curSetting = DeepClone(config);
-            //this.SetOption(config);
+
             this.status.dom_id += config.id || "";
             this.id = config.id;
 
@@ -197,6 +196,7 @@
                 var tg=document.createElement("div");
                 tg.className="vform_form_toggle off";
 
+                //标题部分折叠/展开按钮
                 var ss = ["none",""];
                 var si =1;
                 VForm.on(tg,"click",function(){
@@ -230,7 +230,7 @@
             }
             this.dom.appendChild(tbd);
 
-            //合并列的计算 控件跨列的处理
+            //TODO: 合并列的计算 控件跨列的处理
             if (this.widgets.length % s.column !== 0) {
                 var c = document.createElement("td");
                 c.setAttribute("colspan", (s.column - this.widgets.length % s.column) * 2);
@@ -276,6 +276,10 @@
         if (VForm.InitLang === undefined) return;//没引入语言模块
         if (!VForm.InitLang(language)) return;//引用语言包失败
         this.status.lang = language;
+
+        for(var w in this.widgets){
+            this.widgets[w].Rebuild();
+        }
     }
 
     //取得表单数据

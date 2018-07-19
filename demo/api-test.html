@@ -73,8 +73,8 @@
                     语种切换
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="#">中文</a>
-                        <a class="dropdown-item" href="#">English</a>
+                        <a class="dropdown-item" href="#" name="lang_bt" data-lang="zh-CN">中文</a>
+                        <a class="dropdown-item" href="#" name="lang_bt" data-lang="en">English</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -122,6 +122,13 @@
         $("#canedit_bt").on("click",function(){
             EditChange(true);
         });
+        $("[name='lang_bt']").on("click",function(){
+            var lang =  $(this).data("lang");
+
+            VForm.each(function(){
+                this.SetLanguage(lang);
+            });
+        })
 
     })();
 

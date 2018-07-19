@@ -121,8 +121,7 @@
             if (s.readonly && s.readonly_text === false && obj) obj.setAttribute("disabled", "disabled");
         } else {
             obj = document.createElement("p");//只读情况
-            obj.className = "vform_widget_readonly"
-            //obj.innerHTML = "&nbsp;";
+            obj.className = "vform_widget_readonly";
             this.ctrlObj = obj;
         }
         if (this.ctrlObj) {
